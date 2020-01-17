@@ -6,8 +6,6 @@ import elm from 'highlight.js/lib/languages/elm';
 // see https://bjacobel.com/2016/12/04/highlight-bundle-size/
 hljs.registerLanguage('elm', elm);
 
-
-import "./style.css";
 // @ts-ignore
 window.hljs = hljs;
 const { Elm } = require("./src/Main.elm");
