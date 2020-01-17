@@ -25,7 +25,6 @@ toCss color =
     let
         { red, green, blue, alpha } =
             Color.toRgba color
-                |> Debug.log "color"
     in
     Css.rgba
         (round (red * 255))
