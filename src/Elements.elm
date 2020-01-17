@@ -1,5 +1,6 @@
 module Elements exposing (..)
 
+import Color
 import Colors
 import Css
 import Html.Styled as Html exposing (Attribute, Html)
@@ -22,16 +23,28 @@ h1 attrs children =
             , Css.paddingRight (ModularScale.rem 0)
             , Css.paddingLeft (ModularScale.rem 2)
             , exo2
-            , Css.backgroundImage
-                (Css.linearGradient2
-                    Css.toTop
-                    (Css.stop (Css.rgba 255 255 255 0))
-                    (Css.stop2 (Css.rgba 255 255 255 0) (ModularScale.rem 0))
-                    [ Css.stop2 (Colors.toCss Colors.greenLightest) (ModularScale.rem 0)
-                    , Css.stop2 (Colors.toCss Colors.greenLightest) (Css.rem (ModularScale.scale 0 + ModularScale.scale 1))
-                    , Css.stop2 (Css.rgba 255 255 255 0) (Css.rem (ModularScale.scale 0 + ModularScale.scale 1))
+            , let
+                stops =
+                    [ "rgba(255,255,255,0)"
+                    , "rgba(255,255,255,0) " ++ String.fromFloat (ModularScale.scale 0) ++ "rem"
+                    , Color.toCssString Colors.greenLightest ++ " " ++ String.fromFloat (ModularScale.scale 0) ++ "rem"
+                    , Color.toCssString Colors.greenLightest ++ " " ++ String.fromFloat (ModularScale.scale 0 + ModularScale.scale 1) ++ "rem"
+                    , "rgba(255,255,255,0) " ++ String.fromFloat (ModularScale.scale 0 + ModularScale.scale 1) ++ "rem"
+                    , "rgba(255,255,255,0) " ++ String.fromFloat (ModularScale.scale 4) ++ "rem"
                     ]
-                )
+              in
+              Css.property "background-image" ("repeating-linear-gradient(to top," ++ String.join "," stops ++ ")")
+
+            -- , Css.backgroundImage
+            -- (Css.linearGradient2
+            -- Css.toTop
+            -- (Css.stop (Css.rgba 255 255 255 0))
+            -- (Css.stop2 (Css.rgba 255 255 255 0) (ModularScale.rem 0))
+            -- [ Css.stop2 (Colors.toCss Colors.greenLightest) (ModularScale.rem 0)
+            -- , Css.stop2 (Colors.toCss Colors.greenLightest) (Css.rem (ModularScale.scale 0 + ModularScale.scale 1))
+            -- , Css.stop2 (Css.rgba 255 255 255 0) (Css.rem (ModularScale.scale 0 + ModularScale.scale 1))
+            -- ]
+            -- )
             ]
             :: attrs
         )
