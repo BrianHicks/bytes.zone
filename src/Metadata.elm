@@ -1,9 +1,7 @@
 module Metadata exposing (ArticleMetadata, Metadata(..), PageMetadata, decoder)
 
-import Data.Author
 import Date exposing (Date)
 import Dict exposing (Dict)
-import Element exposing (Element)
 import Json.Decode as Decode exposing (Decoder)
 import List.Extra
 import Pages
@@ -13,7 +11,6 @@ import Pages.ImagePath as ImagePath exposing (ImagePath)
 type Metadata
     = Page PageMetadata
     | Article ArticleMetadata
-    | Author Data.Author.Author
     | BlogIndex
 
 
@@ -21,7 +18,6 @@ type alias ArticleMetadata =
     { title : String
     , description : String
     , published : Date
-    , author : Data.Author.Author
     , image : ImagePath Pages.PathKey
     , draft : Bool
     }
@@ -43,15 +39,8 @@ decoder =
                     "blog-index" ->
                         Decode.succeed BlogIndex
 
-                    "author" ->
-                        Decode.map3 Data.Author.Author
-                            (Decode.field "name" Decode.string)
-                            (Decode.field "avatar" imageDecoder)
-                            (Decode.field "bio" Decode.string)
-                            |> Decode.map Author
-
                     "blog" ->
-                        Decode.map6 ArticleMetadata
+                        Decode.map5 ArticleMetadata
                             (Decode.field "title" Decode.string)
                             (Decode.field "description" Decode.string)
                             (Decode.field "published"
@@ -67,7 +56,6 @@ decoder =
                                         )
                                 )
                             )
-                            (Decode.field "author" Data.Author.decoder)
                             (Decode.field "image" imageDecoder)
                             (Decode.field "draft" Decode.bool
                                 |> Decode.maybe
