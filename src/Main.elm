@@ -1,14 +1,16 @@
 module Main exposing (main)
 
 import Colors
+import Css
+import Css.Global
 import Css.Reset as Reset
 import Date
 import Head
 import Head.Seo as Seo
 import HomePage
 import Html as RootHtml
-import Html.Attributes as Attr
 import Html.Styled as Html exposing (Html)
+import Html.Styled.Attributes as Attr
 import Index
 import Json.Decode
 import Markdown
@@ -147,7 +149,11 @@ pageFrame : List (Html msg) -> Html msg
 pageFrame stuff =
     Html.main_
         []
-        (Reset.meyerV2 :: Reset.borderBoxV201408 :: stuff)
+        (Css.Global.global [ Css.Global.body [ Css.backgroundColor (Colors.toCss Colors.white) ] ]
+            :: Reset.meyerV2
+            :: Reset.borderBoxV201408
+            :: stuff
+        )
 
 
 {-| <https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards>

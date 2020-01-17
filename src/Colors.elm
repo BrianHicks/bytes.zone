@@ -1,10 +1,13 @@
 module Colors exposing
-    ( white
+    ( toCss
+    , white
     , greyLightest, greyMid, greyDarkest
     , greenLightest, greenMid, greenDarkest
     )
 
 {-|
+
+@docs toCss
 
 @docs white
 
@@ -15,6 +18,20 @@ module Colors exposing
 -}
 
 import Color exposing (Color)
+import Css
+
+
+toCss color =
+    let
+        { red, green, blue, alpha } =
+            Color.toRgba color
+                |> Debug.log "color"
+    in
+    Css.rgba
+        (round (red * 255))
+        (round (green * 255))
+        (round (blue * 255))
+        alpha
 
 
 white : Color
