@@ -149,9 +149,14 @@ pageFrame : List (Html msg) -> Html msg
 pageFrame stuff =
     Html.main_
         []
-        (Css.Global.global [ Css.Global.body [ Css.backgroundColor (Colors.toCss Colors.white) ] ]
-            :: Reset.meyerV2
+        (Reset.meyerV2
             :: Reset.borderBoxV201408
+            :: Css.Global.global
+                [ Css.Global.body
+                    [ Css.backgroundColor (Colors.toCss Colors.white)
+                    , Css.fontSize (Css.px 18)
+                    ]
+                ]
             :: pageHeader
             :: stuff
         )
