@@ -12,4 +12,4 @@ view :
     List ( PagePath Pages.PathKey, Metadata )
     -> Html msg
 view posts =
-    Html.text (Debug.toString posts)
+    Html.text "TODO: posts"
