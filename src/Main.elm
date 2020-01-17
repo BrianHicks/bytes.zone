@@ -136,12 +136,12 @@ pageView model siteMetadata page viewForPage =
     case page.frontmatter of
         Metadata.HomePage metadata ->
             { title = metadata.title
-            , body = pageFrame <| HomePage.view siteMetadata metadata
+            , body = pageFrame <| HomePage.view siteMetadata metadata viewForPage
             }
 
         Metadata.Page metadata ->
             { title = metadata.title
-            , body = pageFrame [ Html.text metadata.title ]
+            , body = pageFrame [ Html.text "TODO: PAGE!" ]
             }
 
 
@@ -152,8 +152,19 @@ pageFrame stuff =
         (Css.Global.global [ Css.Global.body [ Css.backgroundColor (Colors.toCss Colors.white) ] ]
             :: Reset.meyerV2
             :: Reset.borderBoxV201408
+            :: pageHeader
             :: stuff
         )
+
+
+pageHeader : Html msg
+pageHeader =
+    Html.header []
+        [ Html.a [] [ Html.text "bytes.zone" ]
+        , Html.a [] [ Html.text "talks" ]
+        , Html.a [] [ Html.text "posts" ]
+        , Html.a [] [ Html.text "code" ]
+        ]
 
 
 {-| <https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards>

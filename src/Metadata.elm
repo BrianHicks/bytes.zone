@@ -28,7 +28,7 @@ decoder =
 
                     "homepage" ->
                         Decode.field "title" Decode.string
-                            |> Decode.map (\title -> Page { title = title })
+                            |> Decode.map (\title -> HomePage { title = title })
 
                     _ ->
                         Decode.fail ("Unexpected page type " ++ pageType)
