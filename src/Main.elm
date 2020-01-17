@@ -1,9 +1,11 @@
 module Main exposing (main)
 
-import Color
+import Colors
+import Css.Reset as Reset
 import Date
 import Head
 import Head.Seo as Seo
+import HomePage
 import Html as RootHtml
 import Html.Attributes as Attr
 import Html.Styled as Html exposing (Html)
@@ -24,27 +26,25 @@ import Pages.StaticHttp as StaticHttp
 
 manifest : Manifest.Config Pages.PathKey
 manifest =
-    { backgroundColor = Just Color.white
-    , categories = [ Pages.Manifest.Category.education ]
+    { backgroundColor = Just Colors.white
+    , categories =
+        [ Pages.Manifest.Category.education
+        , Pages.Manifest.Category.productivity
+        ]
     , displayMode = Manifest.Standalone
     , orientation = Manifest.Portrait
-    , description = "elm-pages-starter - A statically typed site generator."
+    , description = "get in the bytes zone"
     , iarcRatingId = Nothing
-    , name = "elm-pages-starter"
-    , themeColor = Just Color.white
+    , name = "bytes.zone"
+    , themeColor = Just Colors.greenMid
     , startUrl = pages.index
-    , shortName = Just "elm-pages-starter"
+    , shortName = Just "bytes.zone"
     , sourceIcon = images.iconPng
     }
 
 
 type alias Rendered =
     Html Msg
-
-
-
--- the intellij-elm plugin doesn't support type aliases for Programs so we need to use this line
--- main : Platform.Program Pages.Platform.Flags (Pages.Platform.Model Model Msg Metadata Rendered) (Pages.Platform.Msg Msg Metadata Rendered)
 
 
 main : Pages.Platform.Program Model Msg Metadata Rendered
@@ -132,20 +132,22 @@ pageView :
     -> { title : String, body : Html Msg }
 pageView model siteMetadata page viewForPage =
     case page.frontmatter of
+        Metadata.HomePage metadata ->
+            { title = metadata.title
+            , body = pageFrame <| HomePage.view siteMetadata metadata
+            }
+
         Metadata.Page metadata ->
             { title = metadata.title
-            , body = Html.section [] [ Html.text metadata.title ]
+            , body = pageFrame [ Html.text metadata.title ]
             }
 
-        Metadata.Article metadata ->
-            { title = metadata.title
-            , body = Html.section [] [ Html.text metadata.title ]
-            }
 
-        Metadata.BlogIndex ->
-            { title = "elm-pages blog"
-            , body = Html.section [] [ Html.text "todo" ]
-            }
+pageFrame : List (Html msg) -> Html msg
+pageFrame stuff =
+    Html.main_
+        []
+        (Reset.meyerV2 :: Reset.borderBoxV201408 :: stuff)
 
 
 {-| <https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards>
@@ -156,13 +158,13 @@ pageView model siteMetadata page viewForPage =
 head : Metadata -> List (Head.Tag Pages.PathKey)
 head metadata =
     case metadata of
-        Metadata.Page meta ->
+        Metadata.HomePage meta ->
             Seo.summaryLarge
                 { canonicalUrlOverride = Nothing
-                , siteName = "elm-pages-starter"
+                , siteName = "bytes.zone"
                 , image =
                     { url = images.iconPng
-                    , alt = "elm-pages logo"
+                    , alt = "bytes.zone logo"
                     , dimensions = Nothing
                     , mimeType = Nothing
                     }
@@ -172,53 +174,31 @@ head metadata =
                 }
                 |> Seo.website
 
-        Metadata.Article meta ->
+        Metadata.Page meta ->
             Seo.summaryLarge
                 { canonicalUrlOverride = Nothing
-                , siteName = "elm-pages starter"
-                , image =
-                    { url = meta.image
-                    , alt = meta.description
-                    , dimensions = Nothing
-                    , mimeType = Nothing
-                    }
-                , description = meta.description
-                , locale = Nothing
-                , title = meta.title
-                }
-                |> Seo.article
-                    { tags = []
-                    , section = Nothing
-                    , publishedTime = Just (Date.toIsoString meta.published)
-                    , modifiedTime = Nothing
-                    , expirationTime = Nothing
-                    }
-
-        Metadata.BlogIndex ->
-            Seo.summaryLarge
-                { canonicalUrlOverride = Nothing
-                , siteName = "elm-pages"
+                , siteName = "bytes.zone"
                 , image =
                     { url = images.iconPng
-                    , alt = "elm-pages logo"
+                    , alt = "bytes.zone logo"
                     , dimensions = Nothing
                     , mimeType = Nothing
                     }
                 , description = siteTagline
                 , locale = Nothing
-                , title = "elm-pages blog"
+                , title = meta.title
                 }
                 |> Seo.website
 
 
 canonicalSiteUrl : String
 canonicalSiteUrl =
-    "https://elm-pages-starter.netlify.com/"
+    "https://bytes.zone/"
 
 
 siteTagline : String
 siteTagline =
-    "Starter blog for elm-pages"
+    "get in the bytes zone"
 
 
 publishedDateView metadata =
