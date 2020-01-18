@@ -157,6 +157,11 @@ pageFrame stuff =
                     , Css.fontSize (Css.px 18)
                     ]
                 ]
+            :: Html.node "link"
+                [ Attr.href "https://fonts.googleapis.com/css?family=Exo+2:400,700|Open+Sans&display=swap"
+                , Attr.rel "stylesheet"
+                ]
+                []
             :: pageHeader
             :: stuff
         )
