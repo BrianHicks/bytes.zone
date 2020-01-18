@@ -10,7 +10,12 @@ import ModularScale
 
 exo2 : Css.Style
 exo2 =
-    Css.fontFamilies [ "\"Exo 2\"", "Helvetica", "sans-serif" ]
+    Css.fontFamilies [ "\"Exo 2\"", "sans-serif" ]
+
+
+openSans : Css.Style
+openSans =
+    Css.fontFamilies [ "\"Open Sans\"", "sans-serif" ]
 
 
 h1 : List (Attribute msg) -> List (Html msg) -> Html msg
@@ -65,7 +70,7 @@ p : Int -> List (Attribute msg) -> List (Html msg) -> Html msg
 p scale attrs children =
     Html.p
         (css
-            [ exo2
+            [ openSans
             , Css.fontSize (ModularScale.rem scale)
             , Css.lineHeight (ModularScale.rem (scale + 1))
             , Css.marginTop (ModularScale.rem (scale + 1))
