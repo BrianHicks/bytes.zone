@@ -4,8 +4,28 @@ import Color
 import Colors
 import Css
 import Html.Styled as Html exposing (Attribute, Html)
-import Html.Styled.Attributes exposing (css)
+import Html.Styled.Attributes as Attr exposing (css)
+import Markdown.Html
+import Markdown.Parser exposing (Renderer)
 import ModularScale
+
+
+renderer : Renderer (Html msg)
+renderer =
+    { heading = \_ -> Html.text "heading"
+    , raw = p 0 []
+    , html = Markdown.Html.oneOf []
+    , plain = Html.text
+    , code = \_ -> Html.text "code"
+    , bold = \_ -> Html.text "bold"
+    , italic = \_ -> Html.text "italic"
+    , link = \{ title, destination } caption -> Ok (a [ Attr.href destination, Attr.title (Maybe.withDefault "" title) ] caption)
+    , image = \_ _ -> Ok (Html.text "image")
+    , unorderedList = \_ -> Html.text "unordered list"
+    , orderedList = \_ _ -> Html.text "ordered list"
+    , codeBlock = \_ -> Html.text "code block"
+    , thematicBreak = Html.text "thematic break"
+    }
 
 
 exo2 : Css.Style
@@ -25,6 +45,8 @@ h1 attrs children =
             [ Css.paddingLeft (ModularScale.rem 2)
             , Css.maxWidth (ModularScale.rem 9)
             , Css.position Css.relative
+            , Css.fontWeight Css.bold
+            , Css.color (Colors.toCss Colors.greyDarkest)
             , exo2
             , Css.before
                 [ Css.height (Css.pct 100)
@@ -73,9 +95,34 @@ p scale attrs children =
             [ openSans
             , Css.fontSize (ModularScale.rem scale)
             , Css.lineHeight (ModularScale.rem (scale + 1))
-            , Css.marginTop (ModularScale.rem (scale + 1))
+            , Css.marginTop (ModularScale.rem (min 1 (scale + 1)))
             , Css.marginLeft (ModularScale.rem 2)
-            , Css.maxWidth (ModularScale.rem 9)
+            , Css.maxWidth (ModularScale.rem 8)
+            , Css.color (Colors.toCss Colors.greyDarkest)
+            ]
+            :: attrs
+        )
+        children
+
+
+a : List (Attribute msg) -> List (Html msg) -> Html msg
+a attrs children =
+    Html.a
+        (css
+            [ openSans
+            , Css.color (Colors.toCss Colors.greyDarkest)
+            , Css.textDecoration Css.none
+            , Css.property "transition" "all 0.25s"
+            , Css.backgroundImage
+                (Css.linearGradient2
+                    Css.toTop
+                    (Css.stop (Colors.toCss Colors.greenLightest))
+                    (Css.stop2 (Colors.toCss Colors.greenLightest) (Css.pct 35))
+                    [ Css.stop2 (Css.rgba 255 255 255 0) (Css.pct 35) ]
+                )
+            , Css.hover
+                [ Css.backgroundColor (Colors.toCss Colors.greenLightest)
+                ]
             ]
             :: attrs
         )

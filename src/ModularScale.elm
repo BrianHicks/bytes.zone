@@ -3,9 +3,9 @@ module ModularScale exposing (baseFontSize, px, rem, scale, scalePx)
 import Css
 
 
-baseFontSize : Int
+baseFontSize : Float
 baseFontSize =
-    18
+    16
 
 
 rem =
@@ -24,6 +24,6 @@ scale step =
 scalePx : Int -> Float
 scalePx step =
     scale step
-        |> (*) (toFloat baseFontSize)
+        |> (*) baseFontSize
         |> ceiling
         |> toFloat

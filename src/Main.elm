@@ -5,6 +5,7 @@ import Css
 import Css.Global
 import Css.Reset as Reset
 import Date
+import Elements
 import Head
 import Head.Seo as Seo
 import HomePage
@@ -13,8 +14,9 @@ import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attr
 import Index
 import Json.Decode
-import Markdown
+import Markdown.Parser
 import Metadata exposing (Metadata)
+import ModularScale
 import Pages exposing (images, pages)
 import Pages.Directory as Directory exposing (Directory)
 import Pages.Document
@@ -70,8 +72,10 @@ markdownDocument =
         { extension = "md"
         , metadata = Metadata.decoder
         , body =
-            \markdownBody ->
-                Ok <| Html.div [] [ Html.fromUnstyled <| Markdown.toHtml [] markdownBody ]
+            Markdown.Parser.parse
+                >> Result.mapError (List.map Markdown.Parser.deadEndToString >> String.join "\n\n")
+                >> Result.andThen (Markdown.Parser.render Elements.renderer)
+                >> Result.map (Html.section [])
         }
 
 
@@ -152,10 +156,8 @@ pageFrame stuff =
         (Reset.meyerV2
             :: Reset.borderBoxV201408
             :: Css.Global.global
-                [ Css.Global.body
-                    [ Css.backgroundColor (Colors.toCss Colors.white)
-                    , Css.fontSize (Css.px 18)
-                    ]
+                [ Css.Global.body [ Css.backgroundColor (Colors.toCss Colors.white) ]
+                , Css.Global.html [ Css.fontSize (Css.px ModularScale.baseFontSize) ]
                 ]
             :: Html.node "link"
                 [ Attr.href "https://fonts.googleapis.com/css?family=Exo+2:400,700|Open+Sans&display=swap"
