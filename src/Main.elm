@@ -166,6 +166,27 @@ pageView model siteMetadata page viewForPage =
 
 pageFrame : List (Html msg) -> Html msg
 pageFrame stuff =
+    let
+        fontFace : String -> List ( String, String ) -> String -> Int -> Html msg
+        fontFace name paths style weight =
+            String.concat
+                [ "@font-face {"
+                , "font-family:'"
+                , name
+                , "';font-style:"
+                , style
+                , ";font-weight:"
+                , String.fromInt weight
+                , ";font-display:swap;src:local('"
+                , name
+                , "'),"
+                , paths
+                    |> List.map (\( path, format ) -> "url(" ++ path ++ ") format('" ++ format ++ "')")
+                    |> String.join ","
+                , ";}"
+                ]
+                |> Html.text
+    in
     Html.main_
         []
         (Reset.meyerV2
@@ -174,11 +195,16 @@ pageFrame stuff =
                 [ Css.Global.body [ Css.backgroundColor (Colors.toCss Colors.white) ]
                 , Css.Global.html [ Css.fontSize (Css.px ModularScale.baseFontSize) ]
                 ]
-            :: Html.node "link"
-                [ Attr.href "https://fonts.googleapis.com/css?family=Exo+2:400,700|Open+Sans&display=swap"
-                , Attr.rel "stylesheet"
-                ]
+            :: Html.node "style"
                 []
+                [ fontFace "Exo 2" [ ( "/fonts/Exo2-Bold.woff", "woff" ), ( "/fonts/Exo2-Bold.woff2", "woff2" ) ] "normal" 700
+                , fontFace "Exo 2" [ ( "/fonts/Exo2-BoldItalic.woff", "woff" ), ( "/fonts/Exo2-BoldItalic.woff2", "woff2" ) ] "italic" 700
+                , fontFace "Exo 2" [ ( "/fonts/Exo2-Regular.woff", "woff" ), ( "/fonts/Exo2-Regular.woff2", "woff2" ) ] "normal" 400
+                , fontFace "Open Sans" [ ( "/fonts/OpensSans-Bold.woff", "woff" ), ( "/fonts/OpenSans-Bold.woff2", "woff2" ) ] "normal" 700
+                , fontFace "Open Sans" [ ( "/fonts/OpensSans-BoldItalic.woff", "woff" ), ( "/fonts/OpenSans-BoldItalic.woff2", "woff2" ) ] "italic" 700
+                , fontFace "Open Sans" [ ( "/fonts/OpensSans-Italic.woff", "woff" ), ( "/fonts/OpenSans-Italic.woff2", "woff2" ) ] "italic" 400
+                , fontFace "Open Sans" [ ( "/fonts/OpensSans.woff", "woff" ), ( "/fonts/OpenSans.woff2", "woff2" ) ] "normal" 400
+                ]
             :: pageHeader
             :: stuff
         )
