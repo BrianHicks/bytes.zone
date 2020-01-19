@@ -171,12 +171,27 @@ pageFrame stuff =
 
 pageHeader : Html msg
 pageHeader =
-    Html.header [ css [ Css.marginTop (ModularScale.rem 2) ] ]
+    Html.header
+        [ css
+            [ Css.marginTop (ModularScale.rem 2)
+            , Css.displayFlex
+            ]
+        ]
         [ Elements.pageTitle [] [ Html.text "bytes.zone" ]
-        , Html.ul []
-            [ Html.li [] [ Html.a [] [ Html.text "talks" ] ]
-            , Html.li [] [ Html.a [] [ Html.text "posts" ] ]
-            , Html.li [] [ Html.a [] [ Html.text "code" ] ]
+        , let
+            navLinkStyle =
+                css
+                    [ Elements.exo2
+                    , Css.marginLeft (ModularScale.rem 1)
+                    , Css.hover [ Css.backgroundColor (Colors.toCss Colors.greenLightest) ]
+                    ]
+          in
+          Html.ul
+            [ css [ Css.displayFlex ]
+            ]
+            [ Html.li [ navLinkStyle ] [ Elements.a [] [ Html.text "talks" ] ]
+            , Html.li [ navLinkStyle ] [ Elements.a [] [ Html.text "posts" ] ]
+            , Html.li [ navLinkStyle ] [ Elements.a [] [ Html.text "code" ] ]
             ]
         ]
 
