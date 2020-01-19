@@ -16,12 +16,12 @@ px =
     scalePx >> Css.px
 
 
-scale : Int -> Float
+scale : Float -> Float
 scale step =
-    1.61803 ^ toFloat step
+    1.61803 ^ step
 
 
-scalePx : Int -> Float
+scalePx : Float -> Float
 scalePx step =
     scale step
         |> (*) baseFontSize

@@ -93,7 +93,7 @@ pageTitle attrs children =
         children
 
 
-headerUnderline : Int -> Style
+headerUnderline : Float -> Style
 headerUnderline scale =
     -- TODO: should scale be text scale or desired underline scale?
     Css.backgroundImage <|
@@ -104,7 +104,7 @@ headerUnderline scale =
             [ Css.stop2 (Css.rgba 255 255 255 0) (ModularScale.rem scale) ]
 
 
-connectorUnderline : Int -> Style
+connectorUnderline : Float -> Style
 connectorUnderline scale =
     -- TODO: should scale be text scale or desired underline scale?
     let
@@ -120,7 +120,7 @@ connectorUnderline scale =
     Css.property "background-image" ("repeating-linear-gradient(to top," ++ String.join "," stops ++ ")")
 
 
-p : Int -> List (Attribute msg) -> List (Html msg) -> Html msg
+p : Float -> List (Attribute msg) -> List (Html msg) -> Html msg
 p scale attrs children =
     Html.p
         (css
@@ -129,7 +129,7 @@ p scale attrs children =
             , Css.lineHeight (ModularScale.rem (scale + 1))
             , Css.marginTop (ModularScale.rem (min 1 (scale + 1)))
             , Css.marginLeft (ModularScale.rem 2)
-            , Css.maxWidth (ModularScale.rem 8)
+            , Css.maxWidth (ModularScale.rem 7.5)
             , Css.color (Colors.toCss Colors.greyDarkest)
             ]
             :: attrs
@@ -156,32 +156,10 @@ a attrs children =
             , Css.textDecoration Css.none
             , Css.property "transition" "all 0.25s"
             , underline
-            , Css.hover
-                [ Css.backgroundColor (Colors.toCss Colors.greenLightest)
-                , Css.before [ Css.backgroundColor (Colors.toCss Colors.greenLightest) ]
-                , Css.after [ Css.backgroundColor (Colors.toCss Colors.greenLightest) ]
-                ]
+            , Css.hover [ Css.backgroundColor (Colors.toCss Colors.greenLightest) ]
             , Css.position Css.relative
-            , Css.before
-                [ Css.property "content" "''"
-                , Css.position Css.absolute
-                , Css.width (ModularScale.rem -3)
-                , Css.height (Css.pct 100)
-                , underline
-                , Css.left (Css.rem -(ModularScale.scale -3))
-                , Css.top (Css.px 0)
-                , Css.property "transition" "all 0.25s"
-                ]
-            , Css.after
-                [ Css.property "content" "''"
-                , Css.position Css.absolute
-                , Css.width (ModularScale.rem -3)
-                , Css.height (Css.pct 100)
-                , underline
-                , Css.left (Css.pct 100)
-                , Css.top (Css.px 0)
-                , Css.property "transition" "all 0.25s"
-                ]
+            , Css.paddingRight (ModularScale.rem -4)
+            , Css.paddingLeft (ModularScale.rem -4)
             ]
             :: attrs
         )

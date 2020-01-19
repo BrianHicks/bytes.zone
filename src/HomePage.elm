@@ -20,6 +20,62 @@ view siteMetadata pageMetadata rendered =
         , Elements.a [ Attr.href "https://www.brianthicks.com/json-survival-kit/" ] [ Html.text "Mastering Elm: JSON Decoders" ]
         , Html.text " and a bunch of Elm packages. You've found my site!"
         ]
-    , Elements.p 0 [] [ Html.text "latest posts" ]
+    , let
+        { post, code, talk } =
+            List.foldl
+                (\( link, page ) latest ->
+                    case page of
+                        Metadata.Post meta ->
+                            { latest | post = Just ( link, meta ) }
+
+                        Metadata.Code meta ->
+                            { latest | code = Just ( link, meta ) }
+
+                        Metadata.Talk meta ->
+                            { latest | talk = Just ( link, meta ) }
+
+                        _ ->
+                            latest
+                )
+                { post = Nothing
+                , code = Nothing
+                , talk = Nothing
+                }
+                siteMetadata
+
+        phrases =
+            List.filterMap identity
+                [ Maybe.map
+                    (\( path, { title } ) ->
+                        Html.span []
+                            [ Html.text "The latest post I wrote was "
+                            , Elements.a [ Attr.href (PagePath.toString path) ] [ Html.text title ]
+                            , Html.text ", "
+                            ]
+                    )
+                    post
+                , Maybe.map
+                    (\( path, { title } ) ->
+                        Html.span []
+                            [ Html.text "the latest code I released was "
+                            , Elements.a [ Attr.href (PagePath.toString path) ] [ Html.text title ]
+                            , Html.text ", "
+                            ]
+                    )
+                    code
+                , Maybe.map
+                    (\( path, { title, event } ) ->
+                        Html.span []
+                            [ Html.text "and the latest talk I gave was "
+                            , Elements.a [ Attr.href (PagePath.toString path) ] [ Html.text title ]
+                            , Html.text " at "
+                            , Html.text event
+                            , Html.text "."
+                            ]
+                    )
+                    talk
+                ]
+      in
+      Elements.p 0 [] phrases
     , Elements.p -1 [] [ Html.text "Made with Love in St. Louis, MO. Have a wonderful day! ❤️" ]
     ]

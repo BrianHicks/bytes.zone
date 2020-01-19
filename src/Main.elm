@@ -148,6 +148,21 @@ pageView model siteMetadata page viewForPage =
             , body = pageFrame [ Html.text "TODO: PAGE!" ]
             }
 
+        Metadata.Post metadata ->
+            { title = metadata.title
+            , body = pageFrame [ Html.text "TODO: POST!" ]
+            }
+
+        Metadata.Code metadata ->
+            { title = metadata.title
+            , body = pageFrame [ Html.text "TODO: CODE!" ]
+            }
+
+        Metadata.Talk metadata ->
+            { title = metadata.title
+            , body = pageFrame [ Html.text "TODO: TALK!" ]
+            }
+
 
 pageFrame : List (Html msg) -> Html msg
 pageFrame stuff =
@@ -236,6 +251,72 @@ head metadata =
                 , title = meta.title
                 }
                 |> Seo.website
+
+        Metadata.Post meta ->
+            Seo.summaryLarge
+                { canonicalUrlOverride = Nothing
+                , siteName = "bytes.zone"
+                , image =
+                    { url = images.iconPng
+                    , alt = "bytes.zone logo"
+                    , dimensions = Nothing
+                    , mimeType = Nothing
+                    }
+                , description = siteTagline
+                , locale = Nothing
+                , title = meta.title
+                }
+                |> Seo.article
+                    { tags = []
+                    , section = Nothing
+                    , publishedTime = Nothing
+                    , modifiedTime = Nothing
+                    , expirationTime = Nothing
+                    }
+
+        Metadata.Code meta ->
+            Seo.summaryLarge
+                { canonicalUrlOverride = Nothing
+                , siteName = "bytes.zone"
+                , image =
+                    { url = images.iconPng
+                    , alt = "bytes.zone logo"
+                    , dimensions = Nothing
+                    , mimeType = Nothing
+                    }
+                , description = siteTagline
+                , locale = Nothing
+                , title = meta.title
+                }
+                |> Seo.article
+                    { tags = []
+                    , section = Nothing
+                    , publishedTime = Nothing
+                    , modifiedTime = Nothing
+                    , expirationTime = Nothing
+                    }
+
+        Metadata.Talk meta ->
+            Seo.summaryLarge
+                { canonicalUrlOverride = Nothing
+                , siteName = "bytes.zone"
+                , image =
+                    { url = images.iconPng
+                    , alt = "bytes.zone logo"
+                    , dimensions = Nothing
+                    , mimeType = Nothing
+                    }
+                , description = siteTagline
+                , locale = Nothing
+                , title = meta.title
+                }
+                |> Seo.article
+                    { tags = []
+                    , section = Nothing
+                    , publishedTime = Nothing
+                    , modifiedTime = Nothing
+                    , expirationTime = Nothing
+                    }
 
 
 canonicalSiteUrl : String

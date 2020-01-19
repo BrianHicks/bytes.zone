@@ -11,10 +11,27 @@ import Pages.ImagePath as ImagePath exposing (ImagePath)
 type Metadata
     = Page PageMetadata
     | HomePage PageMetadata
+    | Post PostMetadata
+    | Code CodeMetadata
+    | Talk TalkMetadata
 
 
 type alias PageMetadata =
     { title : String }
+
+
+type alias PostMetadata =
+    PageMetadata
+
+
+type alias CodeMetadata =
+    PageMetadata
+
+
+type alias TalkMetadata =
+    { title : String
+    , event : String
+    }
 
 
 decoder =
@@ -29,6 +46,25 @@ decoder =
                     "homepage" ->
                         Decode.field "title" Decode.string
                             |> Decode.map (\title -> HomePage { title = title })
+
+                    "post" ->
+                        Decode.field "title" Decode.string
+                            |> Decode.map (\title -> Post { title = title })
+
+                    "code" ->
+                        Decode.field "title" Decode.string
+                            |> Decode.map (\title -> Code { title = title })
+
+                    "talk" ->
+                        Decode.map2
+                            (\title event ->
+                                Talk
+                                    { title = title
+                                    , event = event
+                                    }
+                            )
+                            (Decode.field "title" Decode.string)
+                            (Decode.field "event" Decode.string)
 
                     _ ->
                         Decode.fail ("Unexpected page type " ++ pageType)
