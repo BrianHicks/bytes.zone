@@ -17,5 +17,8 @@ stdenv.mkDerivation {
     # for elm-pages
     nodejs
     nodePackages.npm
+
+    # for sharp
+    vips
   ] ++ lib.optionals stdenv.isDarwin macosDeps;
 }
