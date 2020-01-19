@@ -2,7 +2,7 @@ module Elements exposing (..)
 
 import Color
 import Colors
-import Css
+import Css exposing (Style)
 import Html.Styled as Html exposing (Attribute, Html)
 import Html.Styled.Attributes as Attr exposing (css)
 import Markdown.Html
@@ -55,30 +55,14 @@ h1 attrs children =
                 , Css.top Css.zero
                 , Css.left Css.zero
                 , Css.property "content" "''"
-                , let
-                    stops =
-                        [ "rgba(255,255,255,0)"
-                        , "rgba(255,255,255,0) calc(" ++ String.fromFloat (ModularScale.scale 0) ++ "rem - 2px)"
-                        , Color.toCssString Colors.greenLightest ++ " calc(" ++ String.fromFloat (ModularScale.scale 0) ++ "rem - 2px)"
-                        , Color.toCssString Colors.greenLightest ++ " calc(" ++ String.fromFloat (ModularScale.scale 0 + ModularScale.scale 1) ++ "rem - 2px)"
-                        , "rgba(255,255,255,0) calc(" ++ String.fromFloat (ModularScale.scale 0 + ModularScale.scale 1) ++ "rem - 2px)"
-                        , "rgba(255,255,255,0) calc(" ++ String.fromFloat (ModularScale.scale 4) ++ "rem - 0.5px)"
-                        ]
-                  in
-                  Css.property "background-image" ("repeating-linear-gradient(to top," ++ String.join "," stops ++ ")")
+                , connectorUnderline 1
                 ]
             ]
             :: attrs
         )
         [ Html.span
             [ css
-                [ Css.backgroundImage
-                    (Css.linearGradient2
-                        Css.toTop
-                        (Css.stop (Colors.toCss Colors.greenLightest))
-                        (Css.stop2 (Colors.toCss Colors.greenLightest) (ModularScale.rem 1))
-                        [ Css.stop2 (Css.rgba 255 255 255 0) (ModularScale.rem 1) ]
-                    )
+                [ headerUnderline 1
                 , Css.lineHeight (ModularScale.rem 4)
                 , Css.paddingRight (ModularScale.rem 0)
                 , Css.fontSize (ModularScale.rem 3)
@@ -86,6 +70,33 @@ h1 attrs children =
             ]
             children
         ]
+
+
+headerUnderline : Int -> Style
+headerUnderline scale =
+    -- TODO: should scale be text scale or desired underline scale?
+    Css.backgroundImage <|
+        Css.linearGradient2
+            Css.toTop
+            (Css.stop (Colors.toCss Colors.greenLightest))
+            (Css.stop2 (Colors.toCss Colors.greenLightest) (ModularScale.rem scale))
+            [ Css.stop2 (Css.rgba 255 255 255 0) (ModularScale.rem scale) ]
+
+
+connectorUnderline : Int -> Style
+connectorUnderline scale =
+    -- TODO: should scale be text scale or desired underline scale?
+    let
+        stops =
+            [ "rgba(255,255,255,0)"
+            , "rgba(255,255,255,0) calc(" ++ String.fromFloat (ModularScale.scale (scale - 1)) ++ "rem - 2px)"
+            , Color.toCssString Colors.greenLightest ++ " calc(" ++ String.fromFloat (ModularScale.scale (scale - 1)) ++ "rem - 2px)"
+            , Color.toCssString Colors.greenLightest ++ " calc(" ++ String.fromFloat (ModularScale.scale (scale - 1) + ModularScale.scale scale) ++ "rem - 2px)"
+            , "rgba(255,255,255,0) calc(" ++ String.fromFloat (ModularScale.scale (scale - 1) + ModularScale.scale scale) ++ "rem - 2px)"
+            , "rgba(255,255,255,0) calc(" ++ String.fromFloat (ModularScale.scale (scale + 3)) ++ "rem - 0.5px)"
+            ]
+    in
+    Css.property "background-image" ("repeating-linear-gradient(to top," ++ String.join "," stops ++ ")")
 
 
 p : Int -> List (Attribute msg) -> List (Html msg) -> Html msg
