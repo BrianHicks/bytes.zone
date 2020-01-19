@@ -177,21 +177,22 @@ pageHeader =
             , Css.displayFlex
             ]
         ]
-        [ Elements.pageTitle [] [ Html.text "bytes.zone" ]
+        [ Elements.pageTitle
+            [ Attr.href (PagePath.toString pages.index) ]
+            [ Html.text "bytes.zone" ]
         , let
             navLinkStyle =
                 css
                     [ Elements.exo2
                     , Css.marginLeft (ModularScale.rem 1)
-                    , Css.hover [ Css.backgroundColor (Colors.toCss Colors.greenLightest) ]
                     ]
           in
           Html.ul
             [ css [ Css.displayFlex ]
             ]
-            [ Html.li [ navLinkStyle ] [ Elements.a [] [ Html.text "talks" ] ]
-            , Html.li [ navLinkStyle ] [ Elements.a [] [ Html.text "posts" ] ]
-            , Html.li [ navLinkStyle ] [ Elements.a [] [ Html.text "code" ] ]
+            [ Html.li [ navLinkStyle ] [ Elements.inactiveHeaderLink [] [ Html.text "talks" ] ]
+            , Html.li [ navLinkStyle ] [ Elements.inactiveHeaderLink [] [ Html.text "posts" ] ]
+            , Html.li [ navLinkStyle ] [ Elements.inactiveHeaderLink [] [ Html.text "code" ] ]
             ]
         ]
 

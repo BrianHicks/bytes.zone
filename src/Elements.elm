@@ -80,10 +80,13 @@ pageTitle attrs children =
             [ exo2
             , Css.fontSize (ModularScale.rem 0)
             , Css.paddingLeft (ModularScale.rem 2)
+            , Css.paddingRight (ModularScale.rem -2)
             , Css.fontWeight Css.bold
             , Css.display Css.inlineBlock
             , headerUnderline -2
             , Css.borderBottom3 (ModularScale.rem -3) Css.solid (Colors.toCss Colors.greenLightest)
+            , Css.textDecoration Css.none
+            , Css.color (Colors.toCss Colors.greyDarkest)
             ]
             :: attrs
         )
@@ -179,6 +182,28 @@ a attrs children =
                 , Css.top (Css.px 0)
                 , Css.property "transition" "all 0.25s"
                 ]
+            ]
+            :: attrs
+        )
+        children
+
+
+inactiveHeaderLink : List (Attribute msg) -> List (Html msg) -> Html msg
+inactiveHeaderLink attrs children =
+    Html.a
+        (css
+            [ openSans
+            , Css.color (Colors.toCss Colors.greyDarkest)
+            , Css.textDecoration Css.none
+            , Css.property "transition" "all 0.25s"
+            , Css.paddingLeft (ModularScale.rem -3)
+            , Css.paddingRight (ModularScale.rem -3)
+            , Css.hover
+                [ Css.backgroundColor (Colors.toCss Colors.greenLightest)
+                , Css.before [ Css.backgroundColor (Colors.toCss Colors.greenLightest) ]
+                , Css.after [ Css.backgroundColor (Colors.toCss Colors.greenLightest) ]
+                ]
+            , Css.position Css.relative
             ]
             :: attrs
         )
