@@ -5,7 +5,7 @@ import Css
 
 baseFontSize : Float
 baseFontSize =
-    16
+    18
 
 
 rem =
