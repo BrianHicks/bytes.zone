@@ -43,7 +43,7 @@ h1 attrs children =
     Html.h1
         (css
             [ Css.paddingLeft (ModularScale.rem 2)
-            , Css.marginTop (ModularScale.rem 3)
+            , Css.marginTop (ModularScale.rem 2)
             , Css.maxWidth (ModularScale.rem 9)
             , Css.position Css.relative
             , Css.fontWeight Css.bold
