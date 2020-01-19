@@ -11,7 +11,7 @@ import Head.Seo as Seo
 import HomePage
 import Html as RootHtml
 import Html.Styled as Html exposing (Html)
-import Html.Styled.Attributes as Attr
+import Html.Styled.Attributes as Attr exposing (css)
 import Index
 import Json.Decode
 import Markdown.Parser
@@ -171,11 +171,13 @@ pageFrame stuff =
 
 pageHeader : Html msg
 pageHeader =
-    Html.header []
-        [ Html.a [] [ Html.text "bytes.zone" ]
-        , Html.a [] [ Html.text "talks" ]
-        , Html.a [] [ Html.text "posts" ]
-        , Html.a [] [ Html.text "code" ]
+    Html.header [ css [ Css.marginTop (ModularScale.rem 2) ] ]
+        [ Elements.pageTitle [] [ Html.text "bytes.zone" ]
+        , Html.ul []
+            [ Html.li [] [ Html.a [] [ Html.text "talks" ] ]
+            , Html.li [] [ Html.a [] [ Html.text "posts" ] ]
+            , Html.li [] [ Html.a [] [ Html.text "code" ] ]
+            ]
         ]
 
 

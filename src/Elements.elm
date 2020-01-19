@@ -72,6 +72,23 @@ h1 attrs children =
         ]
 
 
+pageTitle : List (Attribute msg) -> List (Html msg) -> Html msg
+pageTitle attrs children =
+    Html.a
+        (css
+            [ exo2
+            , Css.fontSize (ModularScale.rem 0)
+            , Css.paddingLeft (ModularScale.rem 2)
+            , Css.fontWeight Css.bold
+            , Css.display Css.inlineBlock
+            , headerUnderline -2
+            , Css.borderBottom3 (ModularScale.rem -3) Css.solid (Colors.toCss Colors.greenLightest)
+            ]
+            :: attrs
+        )
+        children
+
+
 headerUnderline : Int -> Style
 headerUnderline scale =
     -- TODO: should scale be text scale or desired underline scale?
