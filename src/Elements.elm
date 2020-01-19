@@ -107,21 +107,48 @@ p scale attrs children =
 
 a : List (Attribute msg) -> List (Html msg) -> Html msg
 a attrs children =
-    Html.a
-        (css
-            [ openSans
-            , Css.color (Colors.toCss Colors.greyDarkest)
-            , Css.textDecoration Css.none
-            , Css.property "transition" "all 0.25s"
-            , Css.backgroundImage
+    let
+        underline =
+            Css.backgroundImage
                 (Css.linearGradient2
                     Css.toTop
                     (Css.stop (Colors.toCss Colors.greenLightest))
                     (Css.stop2 (Colors.toCss Colors.greenLightest) (Css.pct 35))
                     [ Css.stop2 (Css.rgba 255 255 255 0) (Css.pct 35) ]
                 )
+    in
+    Html.a
+        (css
+            [ openSans
+            , Css.color (Colors.toCss Colors.greyDarkest)
+            , Css.textDecoration Css.none
+            , Css.property "transition" "all 0.25s"
+            , underline
             , Css.hover
                 [ Css.backgroundColor (Colors.toCss Colors.greenLightest)
+                , Css.before [ Css.backgroundColor (Colors.toCss Colors.greenLightest) ]
+                , Css.after [ Css.backgroundColor (Colors.toCss Colors.greenLightest) ]
+                ]
+            , Css.position Css.relative
+            , Css.before
+                [ Css.property "content" "''"
+                , Css.position Css.absolute
+                , Css.width (ModularScale.rem -3)
+                , Css.height (Css.pct 100)
+                , underline
+                , Css.left (Css.rem -(ModularScale.scale -3))
+                , Css.top (Css.px 0)
+                , Css.property "transition" "all 0.25s"
+                ]
+            , Css.after
+                [ Css.property "content" "''"
+                , Css.position Css.absolute
+                , Css.width (ModularScale.rem -3)
+                , Css.height (Css.pct 100)
+                , underline
+                , Css.left (Css.pct 100)
+                , Css.top (Css.px 0)
+                , Css.property "transition" "all 0.25s"
                 ]
             ]
             :: attrs
