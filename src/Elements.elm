@@ -35,8 +35,8 @@ renderer =
             ]
     , plain = Html.text
     , code = \_ -> Html.text "code"
-    , bold = \_ -> Html.text "bold"
-    , italic = \_ -> Html.text "italic"
+    , bold = \text -> strong [] [ Html.text text ]
+    , italic = \text -> em [] [ Html.text text ]
     , link = \{ title, destination } caption -> Ok (a [ Attr.href destination, Attr.title (Maybe.withDefault "" title) ] caption)
     , image = \_ _ -> Ok (Html.text "image")
     , unorderedList = \_ -> Html.text "unordered list"
@@ -58,45 +58,59 @@ openSans =
 
 h1 : List (Attribute msg) -> List (Html msg) -> Html msg
 h1 =
-    heading 3
+    heading 3 Html.h1 True
 
 
 h2 : List (Attribute msg) -> List (Html msg) -> Html msg
 h2 =
-    heading 2
+    heading 2 Html.h2 True
 
 
 h3 : List (Attribute msg) -> List (Html msg) -> Html msg
 h3 =
-    heading 1
+    heading 1 Html.h3 False
 
 
-heading : Float -> List (Attribute msg) -> List (Html msg) -> Html msg
-heading scale attrs children =
-    Html.h1
+heading :
+    Float
+    -> (List (Attribute msg) -> List (Html msg) -> Html msg)
+    -> Bool
+    -> List (Attribute msg)
+    -> List (Html msg)
+    -> Html msg
+heading scale tag underline attrs children =
+    tag
         (css
             [ Css.paddingLeft (ModularScale.rem 2)
             , Css.marginTop (ModularScale.rem 2)
-            , Css.maxWidth (ModularScale.rem 9)
+            , Css.maxWidth (ModularScale.rem 8.5)
             , Css.position Css.relative
             , Css.fontWeight Css.bold
             , Css.color (Colors.toCss Colors.greyDarkest)
             , exo2
-            , Css.before
-                [ Css.height (Css.pct 100)
-                , Css.width (ModularScale.rem 2)
-                , Css.position Css.absolute
-                , Css.top Css.zero
-                , Css.left Css.zero
-                , Css.property "content" "''"
-                , connectorUnderline (scale - 2)
-                ]
+            , if underline then
+                Css.before
+                    [ Css.height (Css.pct 100)
+                    , Css.width (ModularScale.rem 2)
+                    , Css.position Css.absolute
+                    , Css.top Css.zero
+                    , Css.left Css.zero
+                    , Css.property "content" "''"
+                    , connectorUnderline (scale - 2)
+                    ]
+
+              else
+                Css.batch []
             ]
             :: attrs
         )
         [ Html.span
             [ css
-                [ headerUnderline (scale - 2)
+                [ if underline then
+                    headerUnderline (scale - 2)
+
+                  else
+                    Css.batch []
                 , Css.lineHeight (ModularScale.rem (scale + 1))
                 , Css.paddingRight (ModularScale.rem 0)
                 , Css.fontSize (ModularScale.rem scale)
@@ -219,4 +233,18 @@ inactiveHeaderLink attrs children =
             ]
             :: attrs
         )
+        children
+
+
+strong : List (Attribute msg) -> List (Html msg) -> Html msg
+strong attrs children =
+    Html.strong
+        (css [ Css.fontWeight (Css.int 700) ] :: attrs)
+        children
+
+
+em : List (Attribute msg) -> List (Html msg) -> Html msg
+em attrs children =
+    Html.em
+        (css [ Css.fontStyle Css.italic ] :: attrs)
         children
