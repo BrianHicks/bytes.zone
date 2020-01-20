@@ -150,7 +150,11 @@ pageView model siteMetadata page viewForPage =
 
         Metadata.Post metadata ->
             { title = metadata.title
-            , body = pageFrame [ Html.text "TODO: POST!" ]
+            , body =
+                pageFrame
+                    [ Elements.h1 [] [ Html.text metadata.title ]
+                    , viewForPage
+                    ]
             }
 
         Metadata.Code metadata ->
