@@ -12,7 +12,20 @@ import ModularScale
 
 renderer : Renderer (Html msg)
 renderer =
-    { heading = \_ -> Html.text "heading"
+    { heading =
+        \{ level, rawText, children } ->
+            case level of
+                1 ->
+                    h1 [] children
+
+                2 ->
+                    h2 [] children
+
+                3 ->
+                    h3 [] children
+
+                _ ->
+                    Html.text "unimplemented header level"
     , raw = p 0 []
     , html =
         Markdown.Html.oneOf
@@ -44,7 +57,22 @@ openSans =
 
 
 h1 : List (Attribute msg) -> List (Html msg) -> Html msg
-h1 attrs children =
+h1 =
+    heading 3
+
+
+h2 : List (Attribute msg) -> List (Html msg) -> Html msg
+h2 =
+    heading 2
+
+
+h3 : List (Attribute msg) -> List (Html msg) -> Html msg
+h3 =
+    heading 1
+
+
+heading : Float -> List (Attribute msg) -> List (Html msg) -> Html msg
+heading scale attrs children =
     Html.h1
         (css
             [ Css.paddingLeft (ModularScale.rem 2)
@@ -61,17 +89,17 @@ h1 attrs children =
                 , Css.top Css.zero
                 , Css.left Css.zero
                 , Css.property "content" "''"
-                , connectorUnderline 1
+                , connectorUnderline (scale - 2)
                 ]
             ]
             :: attrs
         )
         [ Html.span
             [ css
-                [ headerUnderline 1
-                , Css.lineHeight (ModularScale.rem 4)
+                [ headerUnderline (scale - 2)
+                , Css.lineHeight (ModularScale.rem (scale + 1))
                 , Css.paddingRight (ModularScale.rem 0)
-                , Css.fontSize (ModularScale.rem 3)
+                , Css.fontSize (ModularScale.rem scale)
                 ]
             ]
             children
