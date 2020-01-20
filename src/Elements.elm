@@ -134,7 +134,8 @@ p scale attrs children =
             , Css.lineHeight (ModularScale.rem (scale + 1))
             , Css.marginTop (ModularScale.rem (min 1 (scale + 1)))
             , Css.marginLeft (ModularScale.rem 2)
-            , Css.maxWidth (ModularScale.rem 7.5)
+            , Css.maxWidth (Css.calc (ModularScale.rem 7.5) Css.plus (ModularScale.rem 2))
+            , Css.marginRight (ModularScale.rem 2)
             , Css.color (Colors.toCss Colors.greyDarkest)
             ]
             :: attrs
