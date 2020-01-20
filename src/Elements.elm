@@ -14,7 +14,12 @@ renderer : Renderer (Html msg)
 renderer =
     { heading = \_ -> Html.text "heading"
     , raw = p 0 []
-    , html = Markdown.Html.oneOf []
+    , html =
+        Markdown.Html.oneOf
+            [ Markdown.Html.tag "youtube"
+                (\id children -> Html.text "TODO: youtube")
+                |> Markdown.Html.withAttribute "id"
+            ]
     , plain = Html.text
     , code = \_ -> Html.text "code"
     , bold = \_ -> Html.text "bold"
