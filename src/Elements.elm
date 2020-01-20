@@ -170,7 +170,7 @@ inactiveHeaderLink : List (Attribute msg) -> List (Html msg) -> Html msg
 inactiveHeaderLink attrs children =
     Html.a
         (css
-            [ openSans
+            [ exo2
             , Css.color (Colors.toCss Colors.greyDarkest)
             , Css.textDecoration Css.none
             , Css.property "transition" "all 0.25s"
