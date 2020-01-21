@@ -208,6 +208,7 @@ pageFrame stuff =
                 , fontFace "Open Sans" [ ( "/fonts/OpensSans-BoldItalic.woff", "woff" ), ( "/fonts/OpenSans-BoldItalic.woff2", "woff2" ) ] "italic" 700
                 , fontFace "Open Sans" [ ( "/fonts/OpensSans-Italic.woff", "woff" ), ( "/fonts/OpenSans-Italic.woff2", "woff2" ) ] "italic" 400
                 , fontFace "Open Sans" [ ( "/fonts/OpensSans.woff", "woff" ), ( "/fonts/OpenSans.woff2", "woff2" ) ] "normal" 400
+                , fontFace "Jetbrains Mono" [ ( "/fonts/Jetbrains-Mono.woff", "woff" ), ( "/fonts/Jetbrains-Mono.woff2", "woff2" ) ] "normal" 400
                 ]
             :: pageHeader
             :: stuff

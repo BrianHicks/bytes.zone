@@ -64,7 +64,7 @@ At this stage, please don’t suggest solutions. The core team follows this desi
 
 Finally, I like to organize my notes in Markdown like this. It helps me remember to fill out all the sections:
 
-```
+```markdown
 # {Thread Title} by {author}
 
 Summary or additional thoughts.

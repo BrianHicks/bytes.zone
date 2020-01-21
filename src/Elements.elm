@@ -41,7 +41,7 @@ renderer =
     , image = \_ _ -> Ok (Html.text "image")
     , unorderedList = \_ -> Html.text "unordered list"
     , orderedList = \_ _ -> Html.text "ordered list"
-    , codeBlock = \_ -> Html.text "code block"
+    , codeBlock = \{ body, language } -> codeBlock language [] [ Html.text body ]
     , thematicBreak = Html.text "thematic break"
     }
 
@@ -54,6 +54,11 @@ exo2 =
 openSans : Css.Style
 openSans =
     Css.fontFamilies [ "\"Open Sans\"", "sans-serif" ]
+
+
+jetbrainsMono : Css.Style
+jetbrainsMono =
+    Css.fontFamilies [ "\"Jetbrains Mono\"", "monospace" ]
 
 
 h1 : List (Attribute msg) -> List (Html msg) -> Html msg
@@ -248,3 +253,24 @@ em attrs children =
     Html.em
         (css [ Css.fontStyle Css.italic ] :: attrs)
         children
+
+
+codeBlock : Maybe String -> List (Attribute msg) -> List (Html msg) -> Html msg
+codeBlock language attrs children =
+    Html.pre
+        (css
+            [ Css.fontSize (ModularScale.rem 0)
+            , Css.lineHeight (ModularScale.rem 1)
+            , Css.marginTop (ModularScale.rem 1)
+            , Css.marginLeft (ModularScale.rem 3)
+            , Css.maxWidth (Css.calc (ModularScale.rem 7.5) Css.plus (ModularScale.rem 2))
+            , Css.marginRight (ModularScale.rem 2)
+            , Css.color (Colors.toCss Colors.greyDarkest)
+            , jetbrainsMono
+            ]
+            :: attrs
+        )
+        [ Html.code
+            [ Attr.class (Maybe.withDefault "plaintext" language) ]
+            children
+        ]
