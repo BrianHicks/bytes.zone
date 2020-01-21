@@ -3,6 +3,7 @@ module Elements exposing (..)
 import Color
 import Colors
 import Css exposing (Style)
+import Css.Global
 import Html.Styled as Html exposing (Attribute, Html)
 import Html.Styled.Attributes as Attr exposing (css)
 import Markdown.Html
@@ -27,12 +28,6 @@ renderer =
                 _ ->
                     Html.text "unimplemented header level"
     , raw = p 0 []
-    , html =
-        Markdown.Html.oneOf
-            [ Markdown.Html.tag "youtube"
-                (\id children -> Html.text "TODO: youtube")
-                |> Markdown.Html.withAttribute "id"
-            ]
     , plain = Html.text
     , code = \_ -> Html.text "code"
     , bold = \text -> strong [] [ Html.text text ]
@@ -43,6 +38,12 @@ renderer =
     , orderedList = \_ _ -> Html.text "ordered list"
     , codeBlock = \{ body, language } -> codeBlock language [] [ Html.text body ]
     , thematicBreak = Html.text "thematic break"
+    , html =
+        Markdown.Html.oneOf
+            [ Markdown.Html.tag "youtube"
+                (\id children -> youtube id [] children)
+                |> Markdown.Html.withAttribute "id"
+            ]
     }
 
 
@@ -273,4 +274,47 @@ codeBlock language attrs children =
         [ Html.code
             [ Attr.class (Maybe.withDefault "plaintext" language) ]
             children
+        ]
+
+
+youtube : String -> List (Attribute msg) -> List (Html msg) -> Html msg
+youtube id attrs children =
+    Html.figure
+        (css
+            [ Css.paddingLeft (ModularScale.rem 2)
+            , Css.paddingRight (ModularScale.rem 2)
+            , Css.maxWidth (Css.calc (ModularScale.rem 8) Css.plus (ModularScale.rem 2))
+            , Css.marginTop (ModularScale.rem 2)
+            ]
+            :: attrs
+        )
+        [ Html.div
+            [ css
+                [ Css.position Css.relative
+                , Css.paddingBottom (Css.pct 56.25)
+                , Css.height Css.zero
+                , Css.overflow Css.hidden
+                , Css.maxWidth (Css.pct 100)
+                , Css.Global.descendants
+                    [ Css.Global.each
+                        [ Css.Global.selector "iframe"
+                        , Css.Global.selector "object"
+                        , Css.Global.selector "embed"
+                        ]
+                        [ Css.position Css.absolute
+                        , Css.top Css.zero
+                        , Css.left Css.zero
+                        , Css.height (Css.pct 100)
+                        , Css.width (Css.pct 100)
+                        ]
+                    ]
+                ]
+            ]
+            [ Html.iframe
+                [ Attr.src ("https://www.youtube.com/embed/" ++ id)
+                , Attr.attribute "frameBorder" "0"
+                , Attr.attribute "allowfullscreen" "true"
+                ]
+                []
+            ]
         ]
