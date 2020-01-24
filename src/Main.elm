@@ -243,7 +243,7 @@ pageView model siteMetadata page viewForPage =
 
 
 pageFrame : Model -> List (Html msg) -> Html msg
-pageFrame { particles } stuff =
+pageFrame model stuff =
     let
         fontFace : String -> List ( String, String ) -> String -> Int -> Html msg
         fontFace name paths style weight =
@@ -286,10 +286,14 @@ pageFrame { particles } stuff =
             ]
         , pageHeader
         , Html.main_ [] stuff
-        , Html.fromUnstyled <|
-            Particle.System.view Firework.view
-                [ SAttr.style "position: absolute; top: 0; left: 50vw; width: 50vw; height: 100vh" ]
-                particles
+        , if shouldDoFireworks model then
+            Html.fromUnstyled <|
+                Particle.System.view Firework.view
+                    [ SAttr.style "position: absolute; top: 0; left: 50vw; width: 50vw; height: 100vh" ]
+                    model.particles
+
+          else
+            Html.text ""
         , pageFooter
         ]
 
