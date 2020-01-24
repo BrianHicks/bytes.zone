@@ -33,7 +33,7 @@ at x y =
                 , area = 2
                 }
             )
-        |> Random.list 150
+        |> Random.list 100
 
 
 view : Particle Firework -> Svg msg
