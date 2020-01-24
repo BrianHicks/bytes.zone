@@ -191,28 +191,29 @@ pageFrame stuff =
                 ]
                 |> Html.text
     in
-    Html.main_
+    Html.div
         []
-        (Reset.meyerV2
-            :: Reset.borderBoxV201408
-            :: Css.Global.global
-                [ Css.Global.body [ Css.backgroundColor (Colors.toCss Colors.white) ]
-                , Css.Global.html [ Css.fontSize (Css.px ModularScale.baseFontSize) ]
-                ]
-            :: Html.node "style"
-                []
-                [ fontFace "Exo 2" [ ( "/fonts/Exo2-Bold.woff", "woff" ), ( "/fonts/Exo2-Bold.woff2", "woff2" ) ] "normal" 700
-                , fontFace "Exo 2" [ ( "/fonts/Exo2-BoldItalic.woff", "woff" ), ( "/fonts/Exo2-BoldItalic.woff2", "woff2" ) ] "italic" 700
-                , fontFace "Exo 2" [ ( "/fonts/Exo2-Regular.woff", "woff" ), ( "/fonts/Exo2-Regular.woff2", "woff2" ) ] "normal" 400
-                , fontFace "Open Sans" [ ( "/fonts/OpensSans-Bold.woff", "woff" ), ( "/fonts/OpenSans-Bold.woff2", "woff2" ) ] "normal" 700
-                , fontFace "Open Sans" [ ( "/fonts/OpensSans-BoldItalic.woff", "woff" ), ( "/fonts/OpenSans-BoldItalic.woff2", "woff2" ) ] "italic" 700
-                , fontFace "Open Sans" [ ( "/fonts/OpensSans-Italic.woff", "woff" ), ( "/fonts/OpenSans-Italic.woff2", "woff2" ) ] "italic" 400
-                , fontFace "Open Sans" [ ( "/fonts/OpensSans.woff", "woff" ), ( "/fonts/OpenSans.woff2", "woff2" ) ] "normal" 400
-                , fontFace "Jetbrains Mono" [ ( "/fonts/Jetbrains-Mono.woff", "woff" ), ( "/fonts/Jetbrains-Mono.woff2", "woff2" ) ] "normal" 400
-                ]
-            :: pageHeader
-            :: stuff
-        )
+        [ Reset.meyerV2
+        , Reset.borderBoxV201408
+        , Css.Global.global
+            [ Css.Global.body [ Css.backgroundColor (Colors.toCss Colors.white) ]
+            , Css.Global.html [ Css.fontSize (Css.px ModularScale.baseFontSize) ]
+            ]
+        , Html.node "style"
+            []
+            [ fontFace "Exo 2" [ ( "/fonts/Exo2-Bold.woff", "woff" ), ( "/fonts/Exo2-Bold.woff2", "woff2" ) ] "normal" 700
+            , fontFace "Exo 2" [ ( "/fonts/Exo2-BoldItalic.woff", "woff" ), ( "/fonts/Exo2-BoldItalic.woff2", "woff2" ) ] "italic" 700
+            , fontFace "Exo 2" [ ( "/fonts/Exo2-Regular.woff", "woff" ), ( "/fonts/Exo2-Regular.woff2", "woff2" ) ] "normal" 400
+            , fontFace "Open Sans" [ ( "/fonts/OpensSans-Bold.woff", "woff" ), ( "/fonts/OpenSans-Bold.woff2", "woff2" ) ] "normal" 700
+            , fontFace "Open Sans" [ ( "/fonts/OpensSans-BoldItalic.woff", "woff" ), ( "/fonts/OpenSans-BoldItalic.woff2", "woff2" ) ] "italic" 700
+            , fontFace "Open Sans" [ ( "/fonts/OpensSans-Italic.woff", "woff" ), ( "/fonts/OpenSans-Italic.woff2", "woff2" ) ] "italic" 400
+            , fontFace "Open Sans" [ ( "/fonts/OpensSans.woff", "woff" ), ( "/fonts/OpenSans.woff2", "woff2" ) ] "normal" 400
+            , fontFace "Jetbrains Mono" [ ( "/fonts/Jetbrains-Mono.woff", "woff" ), ( "/fonts/Jetbrains-Mono.woff2", "woff2" ) ] "normal" 400
+            ]
+        , pageHeader
+        , Html.main_ [] stuff
+        , pageFooter
+        ]
 
 
 pageHeader : Html msg
@@ -239,6 +240,19 @@ pageHeader =
             [ Html.li [ navLinkStyle ] [ Elements.inactiveHeaderLink [] [ Html.text "talks" ] ]
             , Html.li [ navLinkStyle ] [ Elements.inactiveHeaderLink [] [ Html.text "posts" ] ]
             , Html.li [ navLinkStyle ] [ Elements.inactiveHeaderLink [] [ Html.text "code" ] ]
+            ]
+        ]
+
+
+pageFooter : Html msg
+pageFooter =
+    Html.footer []
+        [ Elements.hr
+        , Elements.p 0
+            []
+            [ Html.text "The content on this site is released under the "
+            , Elements.a [ Attr.href "https://creativecommons.org/licenses/by/4.0/" ] [ Html.text "Creative Commons Attribution 4.0 International license" ]
+            , Html.text "."
             ]
         ]
 

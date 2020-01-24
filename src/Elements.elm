@@ -318,3 +318,20 @@ youtube id attrs children =
                 []
             ]
         ]
+
+
+hr : Html msg
+hr =
+    Html.hr
+        [ css
+            [ Css.maxWidth (Css.calc (ModularScale.rem 7.5) Css.plus (ModularScale.rem 2))
+            , Css.paddingLeft (ModularScale.rem 2)
+            , Css.textAlign Css.left
+            , Css.marginLeft Css.zero
+            , Css.height (ModularScale.rem -2)
+            , Css.backgroundColor (Colors.toCss Colors.greenLightest)
+            , Css.border Css.zero
+            , Css.marginTop (ModularScale.rem 5)
+            ]
+        ]
+        []
