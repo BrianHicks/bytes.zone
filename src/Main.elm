@@ -249,7 +249,7 @@ pageFooter =
     Html.footer []
         [ Elements.hr
         , Elements.p 0
-            []
+            [ css [ Css.marginBottom (ModularScale.rem 2) ] ]
             [ Html.text "The content on this site is released under the "
             , Elements.a [ Attr.href "https://creativecommons.org/licenses/by/4.0/" ] [ Html.text "Creative Commons Attribution 4.0 International license" ]
             , Html.text "."
