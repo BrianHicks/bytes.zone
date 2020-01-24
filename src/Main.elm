@@ -159,12 +159,20 @@ pageView model siteMetadata page viewForPage =
 
         Metadata.Code metadata ->
             { title = metadata.title
-            , body = pageFrame [ Html.text "TODO: CODE!" ]
+            , body =
+                pageFrame
+                    [ Elements.h1 [] [ Html.text metadata.title ]
+                    , viewForPage
+                    ]
             }
 
         Metadata.Talk metadata ->
             { title = metadata.title
-            , body = pageFrame [ Html.text "TODO: TALK!" ]
+            , body =
+                pageFrame
+                    [ Elements.h1 [] [ Html.text metadata.title ]
+                    , viewForPage
+                    ]
             }
 
 
