@@ -6,10 +6,11 @@ import Css.Global
 import Css.Reset as Reset
 import Date
 import Elements
+import Firework exposing (Firework)
 import Head
 import Head.Seo as Seo
 import HomePage
-import Html as RootHtml
+import Html as Unstyled
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attr exposing (css)
 import Index
@@ -26,6 +27,14 @@ import Pages.Manifest.Category
 import Pages.PagePath as PagePath exposing (PagePath)
 import Pages.Platform exposing (Page)
 import Pages.StaticHttp as StaticHttp
+import Particle.System exposing (System)
+import Process
+import Random
+import Random.Extra
+import Random.Float exposing (normal)
+import Svg.Attributes as SAttr
+import Task
+import Time
 
 
 manifest : Manifest.Config Pages.PathKey
@@ -54,14 +63,14 @@ type alias Rendered =
 main : Pages.Platform.Program Model Msg Metadata Rendered
 main =
     Pages.Platform.application
-        { init = \_ -> init
+        { init = init
         , view = view
         , update = update
         , subscriptions = subscriptions
         , documents = [ markdownDocument ]
         , manifest = manifest
         , canonicalSiteUrl = canonicalSiteUrl
-        , onPageChange = \_ -> ()
+        , onPageChange = ChangePath
         , internals = Pages.internals
         }
 
@@ -80,28 +89,85 @@ markdownDocument =
 
 
 type alias Model =
-    {}
+    { path : Maybe (PagePath Pages.PathKey)
+    , particles : System Firework
+    , seed : Random.Seed
+    }
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( Model, Cmd.none )
+init : Maybe (PagePath Pages.PathKey) -> ( Model, Cmd Msg )
+init path =
+    ( { path = path
+      , particles = Particle.System.init (Random.initialSeed 0)
+      , seed = Random.initialSeed 0
+      }
+    , Cmd.none
+    )
 
 
-type alias Msg =
-    ()
+type Msg
+    = ParticleBurst
+    | ParticleBurstOffset
+    | ParticleMsg (Particle.System.Msg Firework)
+    | ChangePath (PagePath Pages.PathKey)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        () ->
-            ( model, Cmd.none )
+        ParticleBurst ->
+            let
+                ( offset, newSeed ) =
+                    Random.step (normal 1000 250) model.seed
+            in
+            ( { model | seed = newSeed }
+            , Process.sleep offset |> Task.perform (\_ -> ParticleBurstOffset)
+            )
+
+        ParticleBurstOffset ->
+            ( { model
+                | particles =
+                    Particle.System.burst
+                        (Random.Extra.andThen2 Firework.at
+                            (normal 300 100)
+                            (normal 300 100)
+                        )
+                        model.particles
+              }
+            , Cmd.none
+            )
+
+        ParticleMsg subMsg ->
+            -- this is a pretty hot path and it's faster to reconstruct a
+            -- whole record than update a field for whatever reason.
+            ( { path = model.path
+              , particles = Particle.System.update subMsg model.particles
+              , seed = model.seed
+              }
+            , Cmd.none
+            )
+
+        ChangePath newPath ->
+            ( { model | path = Just newPath }
+            , Cmd.none
+            )
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.none
+subscriptions model =
+    if shouldDoFireworks model then
+        Sub.batch
+            [ Particle.System.sub [] ParticleMsg model.particles
+            , Time.every 1000 (\_ -> ParticleBurst)
+            ]
+
+    else
+        Sub.none
+
+
+shouldDoFireworks : Model -> Bool
+shouldDoFireworks { path } =
+    path == Just Pages.pages.index
 
 
 view :
@@ -112,7 +178,7 @@ view :
         }
     ->
         StaticHttp.Request
-            { view : Model -> Rendered -> { title : String, body : RootHtml.Html Msg }
+            { view : Model -> Rendered -> { title : String, body : Unstyled.Html Msg }
             , head : List (Head.Tag Pages.PathKey)
             }
 view siteMetadata page =
@@ -140,18 +206,18 @@ pageView model siteMetadata page viewForPage =
     case page.frontmatter of
         Metadata.HomePage metadata ->
             { title = metadata.title
-            , body = pageFrame <| HomePage.view siteMetadata metadata viewForPage
+            , body = pageFrame model <| HomePage.view siteMetadata metadata viewForPage
             }
 
         Metadata.Page metadata ->
             { title = metadata.title
-            , body = pageFrame [ Html.text "TODO: PAGE!" ]
+            , body = pageFrame model [ Html.text "TODO: PAGE!" ]
             }
 
         Metadata.Post metadata ->
             { title = metadata.title
             , body =
-                pageFrame
+                pageFrame model
                     [ Elements.h1 [] [ Html.text metadata.title ]
                     , viewForPage
                     ]
@@ -160,7 +226,7 @@ pageView model siteMetadata page viewForPage =
         Metadata.Code metadata ->
             { title = metadata.title
             , body =
-                pageFrame
+                pageFrame model
                     [ Elements.h1 [] [ Html.text metadata.title ]
                     , viewForPage
                     ]
@@ -169,15 +235,15 @@ pageView model siteMetadata page viewForPage =
         Metadata.Talk metadata ->
             { title = metadata.title
             , body =
-                pageFrame
+                pageFrame model
                     [ Elements.h1 [] [ Html.text metadata.title ]
                     , viewForPage
                     ]
             }
 
 
-pageFrame : List (Html msg) -> Html msg
-pageFrame stuff =
+pageFrame : Model -> List (Html msg) -> Html msg
+pageFrame { particles } stuff =
     let
         fontFace : String -> List ( String, String ) -> String -> Int -> Html msg
         fontFace name paths style weight =
@@ -220,6 +286,10 @@ pageFrame stuff =
             ]
         , pageHeader
         , Html.main_ [] stuff
+        , Html.fromUnstyled <|
+            Particle.System.view Firework.view
+                [ SAttr.style "position: absolute; top: 0; left: 50vw; width: 50vw; height: 100vh" ]
+                particles
         , pageFooter
         ]
 
