@@ -319,13 +319,14 @@ pageFrame model stuff =
                 Particle.System.view Firework.view
                     [ let
                         offset =
-                            ModularScale.scale 7.5 + ModularScale.scale 2
+                            (ModularScale.scale 7.5 + ModularScale.scale 2)
+                                |> String.fromFloat
                       in
                       SAttr.style
                         ("position: absolute; top: 0; left: "
-                            ++ String.fromFloat offset
+                            ++ offset
                             ++ "rem; width: calc(100% - "
-                            ++ String.fromFloat offset
+                            ++ offset
                             ++ "rem); height: 100vh"
                         )
                     ]
