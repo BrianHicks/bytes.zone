@@ -1,5 +1,7 @@
 module Main exposing (main)
 
+import Browser.Dom
+import Browser.Events
 import Colors
 import Css
 import Css.Global
@@ -92,6 +94,7 @@ type alias Model =
     { path : Maybe (PagePath Pages.PathKey)
     , particles : System Firework
     , seed : Random.Seed
+    , viewportWidth : Float
     }
 
 
@@ -100,8 +103,11 @@ init path =
     ( { path = path
       , particles = Particle.System.init (Random.initialSeed 0)
       , seed = Random.initialSeed 0
+      , viewportWidth = 0
       }
-    , Cmd.none
+    , Task.perform
+        (\viewport -> WidthChanged viewport.scene.width)
+        Browser.Dom.getViewport
     )
 
 
@@ -110,6 +116,7 @@ type Msg
     | ParticleBurstOffset
     | ParticleMsg (Particle.System.Msg Firework)
     | ChangePath (PagePath Pages.PathKey)
+    | WidthChanged Float
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -143,6 +150,7 @@ update msg model =
             ( { path = model.path
               , particles = Particle.System.update subMsg model.particles
               , seed = model.seed
+              , viewportWidth = model.viewportWidth
               }
             , Cmd.none
             )
@@ -152,22 +160,42 @@ update msg model =
             , Cmd.none
             )
 
+        WidthChanged width ->
+            ( { model | viewportWidth = Debug.log "new width" width }
+            , Cmd.none
+            )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    if shouldDoFireworks model then
-        Sub.batch
-            [ Particle.System.sub [] ParticleMsg model.particles
-            , Time.every 1000 (\_ -> ParticleBurst)
-            ]
+    let
+        particleSubs =
+            if shouldDoFireworks model then
+                Sub.batch
+                    [ Particle.System.sub [] ParticleMsg model.particles
+                    , Time.every 1000 (\_ -> ParticleBurst)
+                    ]
 
-    else
-        Sub.none
+            else
+                Sub.none
+    in
+    Sub.batch
+        [ particleSubs
+        , Browser.Events.onResize (\width _ -> WidthChanged (toFloat width))
+        ]
 
 
 shouldDoFireworks : Model -> Bool
-shouldDoFireworks { path } =
-    path == Just Pages.pages.index
+shouldDoFireworks { path, viewportWidth } =
+    let
+        acceptableWidth =
+            ModularScale.scalePx 7.5
+                -- margin
+                + ModularScale.scalePx 2
+                -- just to have a nice viewport
+                + 500
+    in
+    path == Just Pages.pages.index && viewportWidth > acceptableWidth
 
 
 view :
@@ -289,7 +317,18 @@ pageFrame model stuff =
         , if shouldDoFireworks model then
             Html.fromUnstyled <|
                 Particle.System.view Firework.view
-                    [ SAttr.style "position: absolute; top: 0; left: 50vw; width: 50vw; height: 100vh" ]
+                    [ let
+                        offset =
+                            ModularScale.scale 7.5 + ModularScale.scale 2
+                      in
+                      SAttr.style
+                        ("position: absolute; top: 0; left: "
+                            ++ String.fromFloat offset
+                            ++ "rem; width: calc(100% - "
+                            ++ String.fromFloat offset
+                            ++ "rem); height: 100vh"
+                        )
+                    ]
                     model.particles
 
           else
