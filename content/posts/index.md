@@ -1,0 +1,6 @@
+---
+{
+  "type": "index",
+  "category": "posts"
+}
+---

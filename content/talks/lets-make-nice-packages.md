@@ -1,6 +1,7 @@
 ---
 { 
-  "type": "post",
+  "type": "talk",
+  "event": "Elm Europe",
   "title": "Let's Make Nice Packages!",
   "published": "2018-07-18T00:00:00-05:00"
 }

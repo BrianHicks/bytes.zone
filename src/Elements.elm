@@ -205,8 +205,7 @@ a attrs children =
     in
     Html.a
         (css
-            [ openSans
-            , Css.color (Colors.toCss Colors.greyDarkest)
+            [ Css.color (Colors.toCss Colors.greyDarkest)
             , Css.textDecoration Css.none
             , Css.property "transition" "all 0.25s"
             , underline
@@ -224,12 +223,11 @@ inactiveHeaderLink : List (Attribute msg) -> List (Html msg) -> Html msg
 inactiveHeaderLink attrs children =
     Html.a
         (css
-            [ exo2
-            , Css.color (Colors.toCss Colors.greyDarkest)
+            [ Css.color (Colors.toCss Colors.greyDarkest)
             , Css.textDecoration Css.none
             , Css.property "transition" "all 0.25s"
-            , Css.paddingLeft (ModularScale.rem -3)
-            , Css.paddingRight (ModularScale.rem -3)
+            , Css.paddingLeft (ModularScale.rem -4)
+            , Css.paddingRight (ModularScale.rem -4)
             , Css.hover
                 [ Css.backgroundColor (Colors.toCss Colors.greenLightest)
                 , Css.before [ Css.backgroundColor (Colors.toCss Colors.greenLightest) ]

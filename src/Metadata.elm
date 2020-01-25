@@ -1,4 +1,4 @@
-module Metadata exposing (Metadata(..), PageMetadata, decoder)
+module Metadata exposing (IndexCategory(..), Metadata(..), PageMetadata, decoder)
 
 import Date exposing (Date)
 import Dict exposing (Dict)
@@ -14,6 +14,13 @@ type Metadata
     | Post PostMetadata
     | Code CodeMetadata
     | Talk TalkMetadata
+    | Index IndexCategory
+
+
+type IndexCategory
+    = Posts
+    | Codes
+    | Talks
 
 
 type alias PageMetadata =
@@ -65,6 +72,25 @@ decoder =
                             )
                             (Decode.field "title" Decode.string)
                             (Decode.field "event" Decode.string)
+
+                    "index" ->
+                        Decode.field "category" Decode.string
+                            |> Decode.andThen
+                                (\category ->
+                                    case category of
+                                        "posts" ->
+                                            Decode.succeed Posts
+
+                                        "talks" ->
+                                            Decode.succeed Talks
+
+                                        "code" ->
+                                            Decode.succeed Codes
+
+                                        _ ->
+                                            Decode.fail ("Unexpected index category " ++ category)
+                                )
+                            |> Decode.map Index
 
                     _ ->
                         Decode.fail ("Unexpected page type " ++ pageType)

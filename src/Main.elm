@@ -234,18 +234,19 @@ pageView model siteMetadata page viewForPage =
     case page.frontmatter of
         Metadata.HomePage metadata ->
             { title = metadata.title
-            , body = pageFrame model <| HomePage.view siteMetadata metadata viewForPage
+            , body = pageFrame model page.path <| HomePage.view siteMetadata metadata viewForPage
             }
 
         Metadata.Page metadata ->
             { title = metadata.title
-            , body = pageFrame model [ Html.text "TODO: PAGE!" ]
+            , body = pageFrame model page.path [ Html.text "TODO: PAGE!" ]
             }
 
         Metadata.Post metadata ->
             { title = metadata.title
             , body =
                 pageFrame model
+                    page.path
                     [ Elements.h1 [] [ Html.text metadata.title ]
                     , viewForPage
                     ]
@@ -255,6 +256,7 @@ pageView model siteMetadata page viewForPage =
             { title = metadata.title
             , body =
                 pageFrame model
+                    page.path
                     [ Elements.h1 [] [ Html.text metadata.title ]
                     , viewForPage
                     ]
@@ -264,14 +266,20 @@ pageView model siteMetadata page viewForPage =
             { title = metadata.title
             , body =
                 pageFrame model
+                    page.path
                     [ Elements.h1 [] [ Html.text metadata.title ]
                     , viewForPage
                     ]
             }
 
+        Metadata.Index category ->
+            { title = Index.title category
+            , body = pageFrame model page.path [ Index.view category ]
+            }
 
-pageFrame : Model -> List (Html msg) -> Html msg
-pageFrame model stuff =
+
+pageFrame : Model -> PagePath Pages.PathKey -> List (Html msg) -> Html msg
+pageFrame model path stuff =
     let
         fontFace : String -> List ( String, String ) -> String -> Int -> Html msg
         fontFace name paths style weight =
@@ -287,7 +295,7 @@ pageFrame model stuff =
                 , name
                 , "'),"
                 , paths
-                    |> List.map (\( path, format ) -> "url(" ++ path ++ ") format('" ++ format ++ "')")
+                    |> List.map (\( pathToFont, format ) -> "url(" ++ pathToFont ++ ") format('" ++ format ++ "')")
                     |> String.join ","
                 , ";}"
                 ]
@@ -312,7 +320,7 @@ pageFrame model stuff =
             , fontFace "Open Sans" [ ( "/fonts/OpensSans.woff", "woff" ), ( "/fonts/OpenSans.woff2", "woff2" ) ] "normal" 400
             , fontFace "Jetbrains Mono" [ ( "/fonts/Jetbrains-Mono.woff", "woff" ), ( "/fonts/Jetbrains-Mono.woff2", "woff2" ) ] "normal" 400
             ]
-        , pageHeader
+        , pageHeader path
         , Html.main_ [] stuff
         , if shouldDoFireworks model then
             Html.fromUnstyled <|
@@ -338,8 +346,8 @@ pageFrame model stuff =
         ]
 
 
-pageHeader : Html msg
-pageHeader =
+pageHeader : PagePath Pages.PathKey -> Html msg
+pageHeader path =
     Html.header
         [ css
             [ Css.marginTop (ModularScale.rem 2)
@@ -359,11 +367,26 @@ pageHeader =
           Html.ul
             [ css [ Css.displayFlex ]
             ]
-            [ Html.li [ navLinkStyle ] [ Elements.inactiveHeaderLink [] [ Html.text "talks" ] ]
-            , Html.li [ navLinkStyle ] [ Elements.inactiveHeaderLink [] [ Html.text "posts" ] ]
-            , Html.li [ navLinkStyle ] [ Elements.inactiveHeaderLink [] [ Html.text "code" ] ]
+            [ Html.li [ navLinkStyle ] [ headerLink "posts" pages.posts.directory path ]
+            , Html.li [ navLinkStyle ] [ headerLink "code" pages.code.directory path ]
+            , Html.li [ navLinkStyle ] [ headerLink "talks" pages.talks.directory path ]
             ]
         ]
+
+
+headerLink : String -> Directory Pages.PathKey Directory.WithIndex -> PagePath Pages.PathKey -> Html msg
+headerLink caption directory currentPath =
+    let
+        tag =
+            if Directory.includes directory currentPath then
+                Elements.a
+
+            else
+                Elements.inactiveHeaderLink
+    in
+    tag
+        [ Attr.href <| PagePath.toString <| Directory.indexPath directory ]
+        [ Html.text caption ]
 
 
 pageFooter : Html msg
@@ -484,6 +507,22 @@ head metadata =
                     , modifiedTime = Nothing
                     , expirationTime = Nothing
                     }
+
+        Metadata.Index category ->
+            Seo.summary
+                { canonicalUrlOverride = Nothing
+                , siteName = "bytes.zone"
+                , image =
+                    { url = images.iconPng
+                    , alt = "bytes.zone logo"
+                    , dimensions = Nothing
+                    , mimeType = Nothing
+                    }
+                , description = siteTagline
+                , locale = Nothing
+                , title = Index.title category
+                }
+                |> Seo.website
 
 
 canonicalSiteUrl : String
