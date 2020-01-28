@@ -24,7 +24,7 @@ view siteMetadata pageMetadata rendered =
     , let
         { post, code, talk } =
             siteMetadata
-                |> List.sortBy (\( _, page ) -> Time.posixToMillis (Metadata.publishedAt page) * -1)
+                |> List.sortBy (\( _, page ) -> Time.posixToMillis (Metadata.publishedAt page))
                 |> List.foldl
                     (\( link, page ) latest ->
                         case page of
