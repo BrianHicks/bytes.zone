@@ -169,7 +169,7 @@ update msg model =
             )
 
         WidthChanged width ->
-            ( { model | viewportWidth = Debug.log "new width" width }
+            ( { model | viewportWidth = width }
             , Cmd.none
             )
 
