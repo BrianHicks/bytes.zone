@@ -1,7 +1,7 @@
 ---
 {
   "type": "talk",
-  "title": "The State of Elm 2017 (+ Extended Edition)",
+  "title": "The State of Elm 2017 (and Extended Edition)",
   "event": "Elm Europe and Oslo Elm Day",
   "published": "2017-06-16T12:00:00-06:00"
 }
