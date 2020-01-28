@@ -1,4 +1,4 @@
-module Metadata exposing (IndexCategory(..), Metadata(..), PageMetadata, decoder)
+module Metadata exposing (IndexCategory(..), Metadata(..), PageMetadata, categoryTitle, decoder, title)
 
 import Date exposing (Date)
 import Dict exposing (Dict)
@@ -48,25 +48,25 @@ decoder =
                 case pageType of
                     "page" ->
                         Decode.field "title" Decode.string
-                            |> Decode.map (\title -> Page { title = title })
+                            |> Decode.map (\title_ -> Page { title = title_ })
 
                     "homepage" ->
                         Decode.field "title" Decode.string
-                            |> Decode.map (\title -> HomePage { title = title })
+                            |> Decode.map (\title_ -> HomePage { title = title_ })
 
                     "post" ->
                         Decode.field "title" Decode.string
-                            |> Decode.map (\title -> Post { title = title })
+                            |> Decode.map (\title_ -> Post { title = title_ })
 
                     "code" ->
                         Decode.field "title" Decode.string
-                            |> Decode.map (\title -> Code { title = title })
+                            |> Decode.map (\title_ -> Code { title = title_ })
 
                     "talk" ->
                         Decode.map2
-                            (\title event ->
+                            (\title_ event ->
                                 Talk
-                                    { title = title
+                                    { title = title_
                                     , event = event
                                     }
                             )
@@ -95,3 +95,38 @@ decoder =
                     _ ->
                         Decode.fail ("Unexpected page type " ++ pageType)
             )
+
+
+title : Metadata -> String
+title metadata =
+    case metadata of
+        Talk pageMeta ->
+            pageMeta.title
+
+        Page pageMeta ->
+            pageMeta.title
+
+        Post pageMeta ->
+            pageMeta.title
+
+        Code pageMeta ->
+            pageMeta.title
+
+        HomePage pageMeta ->
+            pageMeta.title
+
+        Index category ->
+            categoryTitle category
+
+
+categoryTitle : IndexCategory -> String
+categoryTitle category =
+    case category of
+        Posts ->
+            "Posts"
+
+        Talks ->
+            "Talks"
+
+        Codes ->
+            "Code"

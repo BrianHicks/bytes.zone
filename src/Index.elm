@@ -1,9 +1,12 @@
-module Index exposing (title, view)
+module Index exposing (view)
 
+import Css
 import Date
 import Elements
 import Html.Styled as Html exposing (Html)
+import Html.Styled.Attributes as Attributes exposing (css, href)
 import Metadata exposing (Metadata)
+import ModularScale
 import Pages
 import Pages.Directory as Directory
 import Pages.PagePath as PagePath exposing (PagePath)
@@ -32,43 +35,29 @@ view allPages category =
                 |> List.filter
                     (\( path, _ ) -> path /= Directory.indexPath directory && Directory.includes directory path)
                 |> List.sortBy
-                    (\( _, pageMeta ) ->
-                        case pageMeta of
-                            Metadata.Talk meta ->
-                                meta.title
-
-                            Metadata.Page meta ->
-                                meta.title
-
-                            Metadata.Post meta ->
-                                meta.title
-
-                            Metadata.Code meta ->
-                                meta.title
-
-                            Metadata.HomePage _ ->
-                                ""
-
-                            Metadata.Index _ ->
-                                ""
-                    )
+                    (\( _, pageMeta ) -> Metadata.title pageMeta)
     in
     Html.div []
-        [ Elements.h1 [] [ Html.text (title category) ]
+        [ Elements.h1 [] [ Html.text (Metadata.categoryTitle category) ]
         , pages
-            |> List.map (\( path, page ) -> Html.text (Debug.toString path))
-            |> Html.ul []
+            |> List.map
+                (\( path, page ) ->
+                    Elements.p 0
+                        []
+                        [ Elements.a
+                            [ href (PagePath.toString path)
+                            , css
+                                [ Css.fontSize (ModularScale.rem 0.5)
+                                , Css.fontWeight Css.bold
+                                , Elements.exo2
+                                ]
+                            ]
+                            [ Html.text (Metadata.title page)
+                            ]
+                        , Html.br [] []
+                        , Html.text "published "
+                        , Html.text "Smarch Five, Seventeen Eighty Two"
+                        ]
+                )
+            |> Html.div []
         ]
-
-
-title : Metadata.IndexCategory -> String
-title category =
-    case category of
-        Metadata.Posts ->
-            "Posts"
-
-        Metadata.Talks ->
-            "Talks"
-
-        Metadata.Codes ->
-            "Code"

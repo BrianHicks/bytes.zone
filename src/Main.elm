@@ -281,7 +281,7 @@ pageView model siteMetadata page viewForPage =
             }
 
         Metadata.Index category ->
-            { title = Index.title category
+            { title = Metadata.categoryTitle category
             , body = pageFrame model page.path [ Index.view siteMetadata category ]
             }
 
@@ -528,7 +528,7 @@ head metadata =
                     }
                 , description = siteTagline
                 , locale = Nothing
-                , title = Index.title category
+                , title = Metadata.categoryTitle category
                 }
                 |> Seo.website
 
