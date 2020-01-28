@@ -7,6 +7,7 @@ import Html.Styled.Attributes as Attr
 import Metadata exposing (HomePageMetadata, Metadata)
 import Pages
 import Pages.PagePath as PagePath exposing (PagePath)
+import Time
 
 
 view : List ( PagePath Pages.PathKey, Metadata ) -> HomePageMetadata -> Html msg -> List (Html msg)
@@ -22,26 +23,27 @@ view siteMetadata pageMetadata rendered =
         ]
     , let
         { post, code, talk } =
-            List.foldl
-                (\( link, page ) latest ->
-                    case page of
-                        Metadata.Post meta ->
-                            { latest | post = Just ( link, meta ) }
+            siteMetadata
+                |> List.sortBy (\( _, page ) -> Time.posixToMillis (Metadata.publishedAt page) * -1)
+                |> List.foldl
+                    (\( link, page ) latest ->
+                        case page of
+                            Metadata.Post meta ->
+                                { latest | post = Just ( link, meta ) }
 
-                        Metadata.Code meta ->
-                            { latest | code = Just ( link, meta ) }
+                            Metadata.Code meta ->
+                                { latest | code = Just ( link, meta ) }
 
-                        Metadata.Talk meta ->
-                            { latest | talk = Just ( link, meta ) }
+                            Metadata.Talk meta ->
+                                { latest | talk = Just ( link, meta ) }
 
-                        _ ->
-                            latest
-                )
-                { post = Nothing
-                , code = Nothing
-                , talk = Nothing
-                }
-                siteMetadata
+                            _ ->
+                                latest
+                    )
+                    { post = Nothing
+                    , code = Nothing
+                    , talk = Nothing
+                    }
 
         phrases =
             List.filterMap identity
