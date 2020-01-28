@@ -274,7 +274,7 @@ pageView model siteMetadata page viewForPage =
 
         Metadata.Index category ->
             { title = Index.title category
-            , body = pageFrame model page.path [ Index.view category ]
+            , body = pageFrame model page.path [ Index.view siteMetadata category ]
             }
 
 
