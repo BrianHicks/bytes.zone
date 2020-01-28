@@ -73,6 +73,7 @@ main =
         , manifest = manifest
         , canonicalSiteUrl = canonicalSiteUrl
         , onPageChange = ChangePath
+        , generateFiles = always []
         , internals = Pages.internals
         }
 
@@ -91,14 +92,21 @@ markdownDocument =
 
 
 type alias Model =
-    { path : Maybe (PagePath Pages.PathKey)
+    { path : Maybe Location
     , particles : System Firework
     , seed : Random.Seed
     , viewportWidth : Float
     }
 
 
-init : Maybe (PagePath Pages.PathKey) -> ( Model, Cmd Msg )
+type alias Location =
+    { path : PagePath Pages.PathKey
+    , query : Maybe String
+    , fragment : Maybe String
+    }
+
+
+init : Maybe Location -> ( Model, Cmd Msg )
 init path =
     ( { path = path
       , particles = Particle.System.init (Random.initialSeed 0)
@@ -115,7 +123,7 @@ type Msg
     = ParticleBurst
     | ParticleBurstOffset
     | ParticleMsg (Particle.System.Msg Firework)
-    | ChangePath (PagePath Pages.PathKey)
+    | ChangePath Location
     | WidthChanged Float
 
 
@@ -195,7 +203,7 @@ shouldDoFireworks { path, viewportWidth } =
                 -- just to have a nice viewport
                 + 500
     in
-    path == Just Pages.pages.index && viewportWidth > acceptableWidth
+    Maybe.map .path path == Just Pages.pages.index && viewportWidth > acceptableWidth
 
 
 view :
