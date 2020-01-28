@@ -9,6 +9,7 @@ import Html.Styled.Attributes as Attr exposing (css)
 import Markdown.Html
 import Markdown.Parser exposing (Renderer)
 import ModularScale
+import Time
 
 
 renderer : Renderer (Html msg)
@@ -333,3 +334,59 @@ hr =
             ]
         ]
         []
+
+
+publishedAt : Time.Posix -> Html msg
+publishedAt when =
+    let
+        -- I live in the Midwest (-5 / -6) so I'm just going to set
+        -- publication dates relative to when I mean to publish things. If
+        -- things end up being off by one occasionally, that's OK.
+        zone =
+            Time.customZone (-6 * 60) []
+
+        month =
+            case Time.toMonth zone when of
+                Time.Jan ->
+                    "January"
+
+                Time.Feb ->
+                    "February"
+
+                Time.Mar ->
+                    "March"
+
+                Time.Apr ->
+                    "April"
+
+                Time.May ->
+                    "May"
+
+                Time.Jun ->
+                    "June"
+
+                Time.Jul ->
+                    "July"
+
+                Time.Aug ->
+                    "August"
+
+                Time.Sep ->
+                    "September"
+
+                Time.Oct ->
+                    "October"
+
+                Time.Nov ->
+                    "November"
+
+                Time.Dec ->
+                    "December"
+
+        day =
+            String.fromInt (Time.toDay zone when)
+
+        year =
+            String.fromInt (Time.toYear zone when)
+    in
+    Html.text (month ++ " " ++ day ++ ", " ++ year)

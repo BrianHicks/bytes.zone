@@ -4,12 +4,12 @@ import Css
 import Elements
 import Html.Styled as Html exposing (Html)
 import Html.Styled.Attributes as Attr
-import Metadata exposing (Metadata, PageMetadata)
+import Metadata exposing (HomePageMetadata, Metadata)
 import Pages
 import Pages.PagePath as PagePath exposing (PagePath)
 
 
-view : List ( PagePath Pages.PathKey, Metadata ) -> PageMetadata -> Html msg -> List (Html msg)
+view : List ( PagePath Pages.PathKey, Metadata ) -> HomePageMetadata -> Html msg -> List (Html msg)
 view siteMetadata pageMetadata rendered =
     [ Elements.h1 [] [ Html.text pageMetadata.title ]
     , Elements.p 1

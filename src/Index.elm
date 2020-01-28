@@ -11,6 +11,7 @@ import Pages
 import Pages.Directory as Directory
 import Pages.PagePath as PagePath exposing (PagePath)
 import Pages.Platform exposing (Page)
+import Time
 
 
 view :
@@ -35,7 +36,7 @@ view allPages category =
                 |> List.filter
                     (\( path, _ ) -> path /= Directory.indexPath directory && Directory.includes directory path)
                 |> List.sortBy
-                    (\( _, pageMeta ) -> Metadata.title pageMeta)
+                    (\( _, pageMeta ) -> Time.posixToMillis (Metadata.publishedAt pageMeta) * -1)
     in
     Html.div []
         [ Elements.h1 [] [ Html.text (Metadata.categoryTitle category) ]
@@ -44,19 +45,27 @@ view allPages category =
                 (\( path, page ) ->
                     Elements.p 0
                         []
-                        [ Elements.a
-                            [ href (PagePath.toString path)
-                            , css
+                        [ Html.div
+                            [ css
                                 [ Css.fontSize (ModularScale.rem 0.5)
-                                , Css.fontWeight Css.bold
                                 , Elements.exo2
                                 ]
                             ]
-                            [ Html.text (Metadata.title page)
+                            [ Elements.a
+                                [ href (PagePath.toString path)
+                                , css [ Css.fontWeight Css.bold ]
+                                ]
+                                [ Html.text (Metadata.title page)
+                                ]
+                            , case page of
+                                Metadata.Talk { event } ->
+                                    Html.text (" at " ++ event)
+
+                                _ ->
+                                    Html.text ""
                             ]
-                        , Html.br [] []
                         , Html.text "published "
-                        , Html.text "Smarch Five, Seventeen Eighty Two"
+                        , Elements.publishedAt (Metadata.publishedAt page)
                         ]
                 )
             |> Html.div []
