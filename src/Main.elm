@@ -110,7 +110,7 @@ init : Maybe Location -> ( Model, Cmd Msg )
 init path =
     ( { path = path
       , particles = Particle.System.init (Random.initialSeed 0)
-      , seed = Random.initialSeed 0
+      , seed = Random.initialSeed (Time.posixToMillis Pages.builtAt)
       , viewportWidth = 0
       }
     , Task.perform
