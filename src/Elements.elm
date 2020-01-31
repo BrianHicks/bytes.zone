@@ -36,7 +36,14 @@ renderer =
     , link = \{ title, destination } caption -> Ok (a [ Attr.href destination, Attr.title (Maybe.withDefault "" title) ] caption)
     , image = \_ _ -> Ok (Html.text "image")
     , unorderedList = \_ -> Html.text "unordered list"
-    , orderedList = \_ _ -> Html.text "ordered list"
+    , orderedList =
+        \start items ->
+            ol
+                { start = start
+                , scale = 0
+                , children = items
+                , attrs = []
+                }
     , codeBlock = \{ body, language } -> codeBlock language [] [ Html.text body ]
     , thematicBreak = Html.text "thematic break"
     , html =
@@ -334,6 +341,36 @@ hr =
             ]
         ]
         []
+
+
+ol :
+    { scale : Float
+    , start : Int
+    , attrs : List (Attribute msg)
+    , children : List (List (Html msg))
+    }
+    -> Html msg
+ol { scale, start, attrs, children } =
+    children
+        |> List.map (Html.li [])
+        |> Html.ol
+            (css
+                [ -- list
+                  Css.listStyleType Css.decimal
+                , Css.listStylePosition Css.outside
+                , Css.paddingLeft (ModularScale.rem 3.5)
+
+                -- guts
+                , openSans
+                , Css.fontSize (ModularScale.rem scale)
+                , Css.lineHeight (ModularScale.rem (scale + 1))
+                , Css.marginTop (ModularScale.rem (min 1 (scale + 1)))
+                , Css.maxWidth (Css.calc (ModularScale.rem 7.5) Css.plus (ModularScale.rem 2))
+                , Css.marginRight (ModularScale.rem 2)
+                , Css.color (Colors.toCss Colors.greyDarkest)
+                ]
+                :: attrs
+            )
 
 
 publishedAt : Time.Posix -> Html msg
