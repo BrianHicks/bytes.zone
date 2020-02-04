@@ -19,7 +19,8 @@ def glyphhanger(args):
 def main():
     files = subprocess.check_output(['find', OUTPUT_DIR, '-name', '*.html']).decode('utf-8').strip().split('\n')
     print('Finding subsets of %d fonts on %d pages' % (len(FONTS), len(files)))
-    ranges = json.loads(glyphhanger(files + ['--onlyVisible', '--json', '--family="%s"' % ','.join(FONTS)]))
+    glyphhanger_output = glyphhanger(files + ['--onlyVisible', '--json', '--family="%s"' % ','.join(FONTS)])
+    ranges = json.loads(glyphhanger_output)
 
     for (font, filename) in FONTS.items():
         unicodes = ranges.get(font, None)
