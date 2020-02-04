@@ -20,5 +20,9 @@ stdenv.mkDerivation {
 
     # for sharp
     vips
+
+    # for font subsetting
+    python3
+    python3Packages.fonttools
   ] ++ lib.optionals stdenv.isDarwin macosDeps;
 }
