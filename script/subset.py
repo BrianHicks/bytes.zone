@@ -41,7 +41,12 @@ def main():
         before_size = os.path.getsize(filename)
         after_size = os.path.getsize(out_filename)
 
-        print(before_size, after_size)
+        print('Subset %s from %d to %d bytes (%.2f of original size)' % (
+            filename,
+            before_size,
+            after_size,
+            (float(after_size) / float(before_size)) * 100,
+        ))
 
         os.rename(out_filename, filename)
 
