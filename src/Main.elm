@@ -319,14 +319,14 @@ pageFrame model path stuff =
             ]
         , Html.node "style"
             []
-            [ fontFace "Exo 2" [ ( "/fonts/Exo2-Bold.woff", "woff" ), ( "/fonts/Exo2-Bold.woff2", "woff2" ) ] "normal" 700
-            , fontFace "Exo 2" [ ( "/fonts/Exo2-BoldItalic.woff", "woff" ), ( "/fonts/Exo2-BoldItalic.woff2", "woff2" ) ] "italic" 700
-            , fontFace "Exo 2" [ ( "/fonts/Exo2-Regular.woff", "woff" ), ( "/fonts/Exo2-Regular.woff2", "woff2" ) ] "normal" 400
-            , fontFace "Open Sans" [ ( "/fonts/OpensSans-Bold.woff", "woff" ), ( "/fonts/OpenSans-Bold.woff2", "woff2" ) ] "normal" 700
-            , fontFace "Open Sans" [ ( "/fonts/OpensSans-BoldItalic.woff", "woff" ), ( "/fonts/OpenSans-BoldItalic.woff2", "woff2" ) ] "italic" 700
-            , fontFace "Open Sans" [ ( "/fonts/OpensSans-Italic.woff", "woff" ), ( "/fonts/OpenSans-Italic.woff2", "woff2" ) ] "italic" 400
-            , fontFace "Open Sans" [ ( "/fonts/OpensSans.woff", "woff" ), ( "/fonts/OpenSans.woff2", "woff2" ) ] "normal" 400
-            , fontFace "Jetbrains Mono" [ ( "/fonts/Jetbrains-Mono.woff", "woff" ), ( "/fonts/Jetbrains-Mono.woff2", "woff2" ) ] "normal" 400
+            [ fontFace "Exo 2" [ ( "/fonts/Exo2-Bold.woff2", "woff2" ) ] "normal" 700
+            , fontFace "Exo 2" [ ( "/fonts/Exo2-BoldItalic.woff2", "woff2" ) ] "italic" 700
+            , fontFace "Exo 2" [ ( "/fonts/Exo2-Regular.woff2", "woff2" ) ] "normal" 400
+            , fontFace "Open Sans" [ ( "/fonts/OpenSans-Bold.woff2", "woff2" ) ] "normal" 700
+            , fontFace "Open Sans" [ ( "/fonts/OpenSans-BoldItalic.woff2", "woff2" ) ] "italic" 700
+            , fontFace "Open Sans" [ ( "/fonts/OpenSans-Italic.woff2", "woff2" ) ] "italic" 400
+            , fontFace "Open Sans" [ ( "/fonts/OpenSans.woff2", "woff2" ) ] "normal" 400
+            , fontFace "Jetbrains Mono" [ ( "/fonts/Jetbrains-Mono.woff2", "woff2" ) ] "normal" 400
             ]
         , pageHeader path
         , Html.main_ [] stuff
