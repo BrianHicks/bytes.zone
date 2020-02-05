@@ -22,7 +22,6 @@ stdenv.mkDerivation {
     vips
 
     # for font subsetting
-    python3
-    python3Packages.fonttools
+    (python3.withPackages (ps: [ ps.fonttools ps.brotli ]))
   ] ++ lib.optionals stdenv.isDarwin macosDeps;
 }

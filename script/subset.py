@@ -6,9 +6,9 @@ import os.path
 import subprocess
 
 FONTS = {
-    'Exo 2': './dist/fonts/Exo2-Regular.woff',
-    'Open Sans': './dist/fonts/OpenSans.woff',
-    'Jetbrains Mono': './dist/fonts/Jetbrains-Mono.woff',
+    'Exo 2': './dist/fonts/Exo2-Regular.woff2',
+    'Open Sans': './dist/fonts/OpenSans.woff2',
+    'Jetbrains Mono': './dist/fonts/Jetbrains-Mono.woff2',
 }
 OUTPUT_DIR = './dist'
 
@@ -34,7 +34,7 @@ def main():
             filename,
             '--unicodes=%s' % unicodes,
             '--drop-tables=BASE,JSTF,DSIG,EBDT,EBLC,EBSC,SVG,PCLT,LTSH,Feat,Glat,Gloc,Silf,Sill,CBLC,CBDT,sbix,FFTM',
-            '--flavor=woff',
+            '--flavor=woff2',
             '--output-file=%s' % out_filename,
         ])
         
