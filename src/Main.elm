@@ -322,11 +322,11 @@ pageFrame model path stuff =
             [ fontFace "Exo 2" [ ( "/fonts/Exo2-Bold.woff2", "woff2" ) ] "normal" 700
             , fontFace "Exo 2" [ ( "/fonts/Exo2-BoldItalic.woff2", "woff2" ) ] "italic" 700
             , fontFace "Exo 2" [ ( "/fonts/Exo2-Regular.woff2", "woff2" ) ] "normal" 400
+            , fontFace "Jetbrains Mono" [ ( "/fonts/Jetbrains-Mono.woff2", "woff2" ) ] "normal" 400
             , fontFace "Open Sans" [ ( "/fonts/OpenSans-Bold.woff2", "woff2" ) ] "normal" 700
             , fontFace "Open Sans" [ ( "/fonts/OpenSans-BoldItalic.woff2", "woff2" ) ] "italic" 700
             , fontFace "Open Sans" [ ( "/fonts/OpenSans-Italic.woff2", "woff2" ) ] "italic" 400
             , fontFace "Open Sans" [ ( "/fonts/OpenSans.woff2", "woff2" ) ] "normal" 400
-            , fontFace "Jetbrains Mono" [ ( "/fonts/Jetbrains-Mono.woff2", "woff2" ) ] "normal" 400
             ]
         , pageHeader path
         , Html.main_ [] stuff
