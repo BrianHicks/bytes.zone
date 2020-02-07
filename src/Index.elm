@@ -43,9 +43,9 @@ view allPages category =
         , pages
             |> List.map
                 (\( path, page ) ->
-                    Elements.p 0
+                    Elements.div 0
                         []
-                        [ Html.div
+                        [ Html.h2
                             [ css
                                 [ Css.fontSize (ModularScale.rem 0.5)
                                 , Elements.exo2

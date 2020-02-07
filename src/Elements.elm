@@ -183,20 +183,26 @@ connectorUnderline scale =
 
 p : Float -> List (Attribute msg) -> List (Html msg) -> Html msg
 p scale attrs children =
-    Html.p
-        (css
-            [ openSans
-            , Css.fontSize (ModularScale.rem scale)
-            , Css.lineHeight (ModularScale.rem (scale + 1))
-            , Css.marginTop (ModularScale.rem (min 1 (scale + 1)))
-            , Css.marginLeft (ModularScale.rem 2)
-            , Css.maxWidth (Css.calc (ModularScale.rem 7.5) Css.plus (ModularScale.rem 2))
-            , Css.marginRight (ModularScale.rem 2)
-            , Css.color (Colors.toCss Colors.greyDarkest)
-            ]
-            :: attrs
-        )
-        children
+    Html.p (blockStyles scale :: attrs) children
+
+
+div : Float -> List (Attribute msg) -> List (Html msg) -> Html msg
+div scale attrs children =
+    Html.div (blockStyles scale :: attrs) children
+
+
+blockStyles : Float -> Attribute msg
+blockStyles scale =
+    css
+        [ openSans
+        , Css.fontSize (ModularScale.rem scale)
+        , Css.lineHeight (ModularScale.rem (scale + 1))
+        , Css.marginTop (ModularScale.rem (min 1 (scale + 1)))
+        , Css.marginLeft (ModularScale.rem 2)
+        , Css.maxWidth (Css.calc (ModularScale.rem 7.5) Css.plus (ModularScale.rem 2))
+        , Css.marginRight (ModularScale.rem 2)
+        , Css.color (Colors.toCss Colors.greyDarkest)
+        ]
 
 
 a : List (Attribute msg) -> List (Html msg) -> Html msg
