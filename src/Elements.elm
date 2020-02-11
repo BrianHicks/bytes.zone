@@ -30,7 +30,7 @@ renderer =
                     Html.text "unimplemented header level"
     , raw = p 0 []
     , plain = Html.text
-    , code = \_ -> Html.text "code"
+    , code = \snippet -> code [] [ Html.text snippet ]
     , bold = \text -> strong [] [ Html.text text ]
     , italic = \text -> em [] [ Html.text text ]
     , link = \{ title, destination } caption -> Ok (a [ Attr.href destination, Attr.title (Maybe.withDefault "" title) ] caption)
@@ -377,6 +377,18 @@ ol { scale, start, attrs, children } =
                 ]
                 :: attrs
             )
+
+
+code : List (Attribute msg) -> List (Html msg) -> Html msg
+code attrs children =
+    Html.code
+        (css
+            [ exo2
+            , Css.fontSize (Css.em 1.05)
+            ]
+            :: attrs
+        )
+        children
 
 
 publishedAt : Time.Posix -> Html msg
