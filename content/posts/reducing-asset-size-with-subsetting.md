@@ -211,22 +211,24 @@ It basically slurps down the output of the face-finding script, calls `pyftsubse
 ```
 Finding subsets of 8 fonts on 10 pages
 Subset ./dist/fonts/Exo2-Bold.woff2 from 46656 to 5608 bytes (12.02% of original size, 61 glyphs)
-Subset ./dist/fonts/OpenSans.woff2 from 50116 to 8040 bytes (16.04% of original size, 79 glyphs)
-Subset ./dist/fonts/Exo2-Regular.woff2 from 46300 to 2280 bytes (4.92% of original size, 23 glyphs)
-Subset ./dist/fonts/Jetbrains-Mono.woff2 from 22368 to 10320 bytes (46.14% of original size, 85 glyphs)
+Subset ./dist/fonts/OpenSans.woff2 from 50116 to 8240 bytes (16.44% of original size, 81 glyphs)
+Subset ./dist/fonts/Exo2-Regular.woff2 from 46300 to 3440 bytes (7.43% of original size, 35 glyphs)
+Subset ./dist/fonts/Jetbrains-Mono.woff2 from 22368 to 10564 bytes (47.23% of original size, 87 glyphs)
 Subset ./dist/fonts/OpenSans-Italic.woff2 from 48148 to 3668 bytes (7.62% of original size, 18 glyphs)
+Subset ./dist/fonts/OpenSans-Bold.woff2 from 51932 to 4548 bytes (8.76% of original size, 27 glyphs)
 ```
 
 And looking at the final font sizes, I feel much better aabout shipping these to people's browsers.
 With this result, I can load all the glyphs in all the fonts I need in less size than just one of the original font files:
 
 ```
-8.0K	dist/fonts/OpenSans.woff2
+12K	dist/fonts/OpenSans.woff2
 12K	dist/fonts/Jetbrains-Mono.woff2
 4.0K	dist/fonts/OpenSans-Italic.woff2
 4.0K	dist/fonts/Exo2-Regular.woff2
 8.0K	dist/fonts/Exo2-Bold.woff2
-36K	total
+8.0K	dist/fonts/OpenSans-Bold.woff2
+48K	total
 ```
 
 Aside: I also have some uncompressed-but-unused files in the output of my site, but they aren't ever referenced, so a browser shouldn't ever load them.
@@ -234,7 +236,7 @@ I'm not counting those towards the filesize total here.
 
 ## Success!
 
-In the end, I reduced the size of my font files by about 80%.
+In the end, I reduced the size of my font files by about 86%.
 It worked!
 
 So, in writing about this, would I recommend you do it too?
