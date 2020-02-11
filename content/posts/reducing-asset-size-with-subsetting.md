@@ -1,7 +1,7 @@
 ---
 {
   "type": "post",
-  "title": "Subsetting",
+  "title": "Reducing Asset Size With Subsetting",
   "published": "2020-02-06T22:14:00",
 }
 ---
