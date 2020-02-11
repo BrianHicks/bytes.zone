@@ -32,7 +32,9 @@ def main():
     ]
     print("Finding subsets of %d fonts on %d pages" % (len(FONTS), len(files)))
 
-    faces_output = subprocess.check_output(["node", "./script/faces.js"] + files).decode('utf-8')
+    faces_output = subprocess.check_output(
+        ["node", "./script/faces.js"] + files
+    ).decode("utf-8")
     faces = json.loads(faces_output)
 
     for font_and_chars in faces:
