@@ -23,13 +23,13 @@ When I was building this site, I noticed that my web fonts were kind of big:
 If you happened to load all the fonts with a cold cache, you'd be downloading a bit over a third of a megabyte.
 These were by far the heaviest part of the site, especially compared to the HTML files.
 Those are something like 12kb each, a quarter of the size of even one font.
-I don't like that difference!
+I don't like that difference, so let's see if we can make them smaller!
 
-So what's in those files anyway?
+But what's in those files anyway?
 Why are they so big?
-Let's take a look at [Exo 2](https://github.com/NDISCOVER/Exo-2.0), my heading font: in addition to the normal ASCII characters, it has a ton of Greek, Cyrillyic, and Vietnamese characters.
+Consider [Exo 2](https://github.com/NDISCOVER/Exo-2.0), my heading font: in addition to the normal ASCII characters, it has a ton of Greek, Cyrillyic, and Vietnamese characters.
 This is great!
-Tons of people can use this nice font… but I never use those characters on *my* site, so why should I include them?
+Tons of people speaking all kinds of languages can use this font to communicate… but I never use those characters on *my* site, so why should I serve them?
 
 Fortunately, this is a known problem, and we can solve it with something called [subsetting](https://en.wikipedia.org/wiki/Subsetting).
 Subsetting, in general, is where you retrieve only the parts you need from a large data set.
@@ -232,8 +232,21 @@ With this result, I can load all the glyphs in all the fonts I need in less size
 Aside: I also have some uncompressed-but-unused files in the output of my site, but they aren't ever referenced, so a browser shouldn't ever load them.
 I'm not counting those towards the filesize total here.
 
-So, would I recommend you do this too?
-I think yes, as long as you have a static site where all the content is known at build-time (e.g. not being pulled in dynamically at all.)
-In this case, it's a really useful hack to reduce the size of some big assets.
+## Success!
+
+In the end, I reduced the size of my font files by about 80%.
+It worked!
+
+So, in writing about this, would I recommend you do it too?
+Solid **maybe**!
+
+I think it makes sense to do this on a site where:
+
+1. **You're using custom fonts.** If you're using generic font names (like `sans-serif` or `monospace`) or your font stack is a mix of built-ins and system fonts (e.g. `Helvetica, Arial, sans-serif`), there's no need to save on bandwidth here; your readers already have the whole font!
+2. **All your content is known in advance.** If you have anything that's dynamically loaded, you'll get really weird results where some—but not all—of your characters will be replaced by the fallback font.
+3. **Fonts are actually the largest asset class.** If you're serving a 10mb JPEG as a background image, compressing that is a lot easier and will be a much better experience for your readers than figuring out a subsetting pipeline for your site. My framework, [elm-pages](https://elm-pages.com) takes care of this for me. If yours doesn't, searching around for image optimization tools will probably net you some easy wins.
+
+If your site meets all those conditions, give it a try!
+I've linked to the source of my scripts in the page above, and you can check out the full latest source for this site at [git.bytes.zone/bytes.zone/bytes.zone](https://git.bytes.zone/bytes.zone/bytes.zone). (is it just me or is it echoing in here?)
 
 Have fun!
