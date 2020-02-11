@@ -246,7 +246,7 @@ I think it makes sense to do this on a site where:
 
 1. **You're using custom fonts.** If you're using generic font names (like `sans-serif` or `monospace`) or your font stack is a mix of built-ins and system fonts (e.g. `Helvetica, Arial, sans-serif`), there's no need to save on bandwidth here; your readers already have the whole font!
 2. **All your content is known in advance.** If you have anything that's dynamically loaded, you'll get really weird results where some—but not all—of your characters will be replaced by the fallback font.
-3. **Fonts are actually the largest asset class.** If you're serving a 10mb JPEG as a background image, compressing that is a lot easier and will be a much better experience for your readers than figuring out a subsetting pipeline for your site. My framework, [elm-pages](https://elm-pages.com) takes care of this for me. If yours doesn't, searching around for image optimization tools will probably net you some easy wins.
+3. **Fonts are actually the largest asset class.** If you're serving a 10mb JPEG as a background image, compressing that is a lot easier and will be a much better experience for your readers than figuring out a subsetting pipeline for your site. My framework, [elm-pages](https://elm-pages.com), takes care of this for me. If yours doesn't, searching around for image optimization tools will probably net you some easy wins.
 
 If your site meets all those conditions, give it a try!
 I've linked to the source of my scripts in the page above, and you can check out the full latest source for this site at [git.bytes.zone/bytes.zone/bytes.zone](https://git.bytes.zone/bytes.zone/bytes.zone). (is it just me or is it echoing in here?)
