@@ -40,7 +40,7 @@ But how?
 ## Breaking it Down
 
 Well, since this is a static site, all the content is known in advance.
-Hypothetically, that means that I can examine all the content and figure out what characters I need to render it.
+Hypothetically, that means that I can examine all the markdown files and figure out what characters I need to render it.
 But when I thought about this more, I realized it wouldn't work: what about the navigation and footer?
 I also render headers and code samples in different fonts than I do the body copy.
 
