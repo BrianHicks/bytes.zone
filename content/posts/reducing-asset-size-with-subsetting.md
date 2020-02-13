@@ -176,7 +176,7 @@ Finally, after analyzing each file, we combine the objects into a list.
 
 When the script returns, we end up with a JSON blob like this.
 This is just [the homepage](/) and I've removed all the fallback fonts.
-If I had passed more files into the script (for example, the output of `find dist -type f -name '*.html'`) I would see much more information in this array:
+If I had passed more files into the script (for example, the output of `find`) I would see much more information in this array:
 
 ```json
 [
