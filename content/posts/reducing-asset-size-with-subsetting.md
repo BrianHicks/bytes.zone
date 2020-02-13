@@ -237,8 +237,11 @@ I'm not counting those towards the filesize total here.
 
 ## Success!
 
-In the end, I reduced the size of my font files by about 86%.
-It worked!
+In the end, I reduced the size of my font files by about 87%, going from 386K to 48K.
+The final subsets have about 300 total characters to render my site.
+While this will grow over time as I add more content, it should level out pretty quickly.
+
+In short: it worked!
 
 So, in writing about this, would I recommend you do it too?
 Solid **maybe**!
