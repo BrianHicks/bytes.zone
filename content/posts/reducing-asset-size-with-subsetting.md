@@ -46,9 +46,10 @@ I also render headers and code samples in different fonts than I do the body cop
 
 Well, again, static site!
 I can surely just inspect the output, right?
-But another challenge there: the font family is set with CSS, which means I need to calculate the style rules the way a browser would.
+But another challenge there: the exact font—including things like bold and italic—is set with CSS.
+Since normal, bold, and italic live in separate files, I need to calculate the style rules the way a browser would to be able to make the smallest possible subsets.
 
-Which… means… I should probably just drive a headless browser, huh?
+But that means… oh… I should probably just drive a headless browser, huh?
 
 Sigh.
 
