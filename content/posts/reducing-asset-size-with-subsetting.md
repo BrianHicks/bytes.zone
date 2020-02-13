@@ -81,9 +81,12 @@ First we start the browser and load a page:
   const page = await browser.newPage();
   
   // in the real script I'm looping over the files in process.argv.slice(2)
-  await page.goto("file://" + __dirname + "dist/index.html");
+  for (file of process.argv.slice(2)) {
+    await page.goto("file://" + file);
+    
+    // the rest of our script (next code block)
+  }
   
-  // the rest of our script (next code block)
 })();
 ```
 
@@ -106,11 +109,22 @@ const fileOut = await page.evaluate(function() {
     return out.join("");
   }
   
-  todo = [window.document];
-  out = {};
+  // we're going to accumulate information about each text node in this object.
+  // see the next code snippet for how we actually use it.
+  let out = {};
+  
+  // todo is a stack of nodes we have left to visit. We start with the top node
+  // of the document and work our way down from there.
+  let todo = [window.document];
+  
   while (todo.length !== 0) {
     let node = todo.shift()
     
+    // `childNodes` is not an array, but you can still access its children by
+    // index. We are descending into the node so we just push all the children
+    // onto the stack. It doesn't matter much for this application whether we
+    // use a depth-first or a breadth-first search—we want to get all the
+    // nodees either way.
     for (var i = 0; i < node.childNodes.length; i++) {
       todo.push(node.childNodes[i]);
     }
@@ -119,11 +133,13 @@ const fileOut = await page.evaluate(function() {
       // the rest of our script (next code block)
     }
   }
+  
+  return out;
 });
 ```
 
-And finally we can accumulate our calculated styles.
-I do this in an object with the style information as the key so we can add characters to it easily:
+Finally we can accumulate our calculated styles.
+I do this in an object with the style information as the key (`out` above) so we can add characters to it easily:
 
 ```javascript
 let styles = window.getComputedStyle(node.parentElement);
@@ -160,7 +176,8 @@ Finally, after analyzing each file, we combine the objects into a list.
 (I haven't shown this but you can see it [in the source as of this writing](https://git.bytes.zone/bytes.zone/bytes.zone/src/commit/7d957f13a7801ecbf1a5f663d263538214e44990/script/faces.js))
 
 When the script returns, we end up with a JSON blob like this.
-This is just [the homepage](/) and I've removed all the fallback fonts:
+This is just [the homepage](/) and I've removed all the fallback fonts.
+If I had passed more files into the script (for example, the output of `find dist -type f -name '*.html'`) I would see much more information in this array:
 
 ```json
 [
