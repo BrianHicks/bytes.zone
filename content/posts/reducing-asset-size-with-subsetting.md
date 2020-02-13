@@ -80,7 +80,6 @@ First we start the browser and load a page:
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   
-  // in the real script I'm looping over the files in process.argv.slice(2)
   for (file of process.argv.slice(2)) {
     await page.goto("file://" + file);
     
