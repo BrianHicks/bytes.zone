@@ -1,5 +1,3 @@
-// @ts-ignore
-window.hljs = hljs;
 const { Elm } = require("./src/Main.elm");
 const pagesInit = require("elm-pages");
 
