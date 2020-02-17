@@ -9,6 +9,7 @@ import Html.Styled.Attributes as Attr exposing (css)
 import Markdown.Html
 import Markdown.Parser exposing (Renderer)
 import ModularScale
+import SyntaxHighlight
 import Time
 
 
@@ -44,7 +45,7 @@ renderer =
                 , children = items
                 , attrs = []
                 }
-    , codeBlock = \{ body, language } -> codeBlock language [] [ Html.text body ]
+    , codeBlock = \{ body, language } -> codeBlock [] language body
     , thematicBreak = Html.text "thematic break"
     , html =
         Markdown.Html.oneOf
@@ -268,25 +269,124 @@ em attrs children =
         children
 
 
-codeBlock : Maybe String -> List (Attribute msg) -> List (Html msg) -> Html msg
-codeBlock language attrs children =
-    Html.pre
-        (css
-            [ Css.fontSize (ModularScale.rem 0)
-            , Css.lineHeight (ModularScale.rem 1)
-            , Css.marginTop (ModularScale.rem 1)
-            , Css.marginLeft (ModularScale.rem 3)
-            , Css.maxWidth (Css.calc (ModularScale.rem 7.5) Css.plus (ModularScale.rem 2))
-            , Css.marginRight (ModularScale.rem 2)
-            , Css.color (Colors.toCss Colors.greyDarkest)
-            , jetbrainsMono
-            ]
-            :: attrs
-        )
-        [ Html.code
-            [ Attr.class (Maybe.withDefault "plaintext" language) ]
-            children
-        ]
+codeBlock : List (Attribute msg) -> Maybe String -> String -> Html msg
+codeBlock attrs maybeLanguage body =
+    maybeLanguage
+        |> Maybe.andThen
+            (\language ->
+                Result.toMaybe <|
+                    case language of
+                        "elm" ->
+                            SyntaxHighlight.elm body
+
+                        "javascript" ->
+                            SyntaxHighlight.javascript body
+
+                        "json" ->
+                            SyntaxHighlight.json body
+
+                        _ ->
+                            Err []
+            )
+        |> Maybe.map
+            (SyntaxHighlight.toCustom
+                { noOperation = \fragments -> Html.div [] fragments
+                , highlight = \fragments -> Html.text "highlight"
+                , addition = \fragments -> Html.text "addition"
+                , deletion = \fragments -> Html.text "deletion"
+
+                -- default text style
+                , default = Html.text
+
+                -- comment text style
+                , comment =
+                    \raw ->
+                        Html.span
+                            [ css [ Css.color (Css.hex "555559") ]
+                            , Attr.class "comment"
+                            ]
+                            [ Html.text raw ]
+
+                -- Number
+                , style1 =
+                    \raw ->
+                        Html.span
+                            [ css [ Css.color (Colors.toCss Colors.greenDarkest) ]
+                            , Attr.class "style1"
+                            ]
+                            [ Html.text raw ]
+
+                -- Literal string, attribute value
+                , style2 =
+                    \raw ->
+                        Html.span
+                            [ css [ Css.color (Colors.toCss Colors.greenMid) ]
+                            , Attr.class "style2"
+                            ]
+                            [ Html.text raw ]
+
+                -- Keyword, tag, operator symbols (+, -, /)
+                , style3 =
+                    \raw ->
+                        Html.span
+                            [ css [ Css.color (Colors.toCss Colors.greenMid) ]
+                            , Attr.class "style3"
+                            ]
+                            [ Html.text raw ]
+
+                -- Keyword 2, group symbols ({}, []), type signature
+                , style4 =
+                    \raw ->
+                        Html.span
+                            [ css [ Css.color (Colors.toCss Colors.greyDarkest) ]
+                            , Attr.class "style4"
+                            ]
+                            [ Html.text raw ]
+
+                -- Function, attribute name
+                , style5 =
+                    \raw ->
+                        Html.span
+                            [ css [ Css.color (Colors.toCss Colors.greyDarkest) ]
+                            , Attr.class "style5"
+                            ]
+                            [ Html.text raw ]
+
+                -- Literal keyword, capitalized types
+                , style6 =
+                    \raw ->
+                        Html.span
+                            [ css [ Css.color (Colors.toCss Colors.greenDarkest) ]
+                            , Attr.class "style6"
+                            ]
+                            [ Html.text raw ]
+
+                -- Argument, parameter
+                , style7 =
+                    \raw ->
+                        Html.span
+                            [ css [ Css.color (Colors.toCss Colors.greyMid) ]
+                            , Attr.class "style7"
+                            ]
+                            [ Html.text raw ]
+                }
+            )
+        |> Maybe.withDefault [ Html.text body ]
+        |> Html.code []
+        |> List.singleton
+        |> Html.pre
+            (css
+                [ Css.fontSize (ModularScale.rem 0)
+                , Css.lineHeight (ModularScale.rem 1)
+                , Css.marginTop (ModularScale.rem 1)
+                , Css.marginLeft (ModularScale.rem 3)
+                , Css.maxWidth (Css.calc (ModularScale.rem 7.5) Css.plus (ModularScale.rem 2))
+                , Css.marginRight (ModularScale.rem 2)
+                , Css.color (Colors.toCss Colors.greyDarkest)
+                , jetbrainsMono
+                ]
+                :: attrs
+            )
 
 
 youtube : String -> List (Attribute msg) -> List (Html msg) -> Html msg
