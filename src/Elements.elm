@@ -46,6 +46,7 @@ renderer =
                 , attrs = []
                 }
     , codeBlock = \{ body, language } -> codeBlock [] language body
+    , blockQuote = \_ -> Html.text "blockquote"
     , thematicBreak = Html.text "thematic break"
     , html =
         Markdown.Html.oneOf
