@@ -385,11 +385,14 @@ codeBlock attrs maybeLanguage body =
                 [ Css.fontSize (ModularScale.rem 0)
                 , Css.lineHeight (ModularScale.rem 1)
                 , Css.marginTop (ModularScale.rem 1)
-                , Css.marginLeft (ModularScale.rem 3)
+                , Css.paddingLeft (ModularScale.rem 3)
                 , Css.maxWidth (Css.calc (ModularScale.rem 7.5) Css.plus (ModularScale.rem 2))
-                , Css.marginRight (ModularScale.rem 2)
+                , Css.paddingRight (ModularScale.rem 2)
                 , Css.color (Colors.toCss Colors.greyDarkest)
                 , jetbrainsMono
+
+                -- mobile
+                , Css.overflow Css.auto
                 ]
                 :: attrs
             )
