@@ -163,21 +163,26 @@ headerUnderline scale =
         Css.linearGradient2
             Css.toTop
             (Css.stop (Colors.toCss Colors.greenLightest))
-            (Css.stop2 (Colors.toCss Colors.greenLightest) (ModularScale.rem scale))
-            [ Css.stop2 (Css.rgba 255 255 255 0) (ModularScale.rem scale) ]
+            (Css.stop2 (Colors.toCss Colors.greenLightest) (ModularScale.px scale))
+            [ Css.stop2 (Css.rgba 255 255 255 0) (ModularScale.px scale) ]
 
 
 connectorUnderline : Float -> Style
 connectorUnderline scale =
     -- TODO: should scale be text scale or desired underline scale?
     let
+        -- typeface metrics and rounding mean that the lines are not completely
+        -- lined up and we need to fudge a bit.
+        adjustment =
+            -2
+
         stops =
             [ "rgba(255,255,255,0)"
-            , "rgba(255,255,255,0) calc(" ++ String.fromFloat (ModularScale.scale (scale - 1)) ++ "rem - 2px)"
-            , Color.toCssString Colors.greenLightest ++ " calc(" ++ String.fromFloat (ModularScale.scale (scale - 1)) ++ "rem - 2px)"
-            , Color.toCssString Colors.greenLightest ++ " calc(" ++ String.fromFloat (ModularScale.scale (scale - 1) + ModularScale.scale scale) ++ "rem - 2px)"
-            , "rgba(255,255,255,0) calc(" ++ String.fromFloat (ModularScale.scale (scale - 1) + ModularScale.scale scale) ++ "rem - 2px)"
-            , "rgba(255,255,255,0) calc(" ++ String.fromFloat (ModularScale.scale (scale + 3)) ++ "rem - 0.5px)"
+            , "rgba(255,255,255,0) " ++ String.fromFloat (ModularScale.scalePx (scale - 1) + adjustment) ++ "px"
+            , Color.toCssString Colors.greenLightest ++ " " ++ String.fromFloat (ModularScale.scalePx (scale - 1) + adjustment) ++ "px"
+            , Color.toCssString Colors.greenLightest ++ " " ++ String.fromFloat (ModularScale.scalePx (scale - 1) + ModularScale.scalePx scale + adjustment) ++ "px"
+            , "rgba(255,255,255,0) " ++ String.fromFloat (ModularScale.scalePx (scale - 1) + ModularScale.scalePx scale + adjustment) ++ "px"
+            , "rgba(255,255,255,0) " ++ String.fromFloat (ModularScale.scalePx (scale + 3) - 1) ++ "px"
             ]
     in
     Css.property "background-image" ("repeating-linear-gradient(to top," ++ String.join "," stops ++ ")")
