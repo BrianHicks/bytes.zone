@@ -4,6 +4,7 @@ import Color
 import Colors
 import Css exposing (Style)
 import Css.Global
+import Css.Media as Media
 import Html.Styled as Html exposing (Attribute, Html)
 import Html.Styled.Attributes as Attr exposing (css)
 import Markdown.Html
@@ -97,22 +98,30 @@ heading :
 heading scale tag underline attrs children =
     tag
         (css
-            [ Css.paddingLeft (ModularScale.rem 2)
-            , Css.marginTop (ModularScale.rem 2)
-            , Css.maxWidth (ModularScale.rem 8.5)
-            , Css.position Css.relative
+            [ Css.position Css.relative
             , Css.fontWeight Css.bold
             , Css.color (Colors.toCss Colors.greyDarkest)
             , exo2
+            , responsivePaddingLeft
+            , Css.marginTop (ModularScale.rem 2)
+            , Css.maxWidth (ModularScale.rem 8.5)
             , if underline then
                 Css.before
                     [ Css.height (Css.pct 100)
-                    , Css.width (ModularScale.rem 2)
+                    , responsive
+                        { desktop =
+                            [ Css.width (ModularScale.rem 2)
+                            , connectorUnderline (scale - 2)
+                            ]
+                        , mobile =
+                            [ Css.width (ModularScale.rem -1)
+                            , connectorUnderline (scale - 3)
+                            ]
+                        }
                     , Css.position Css.absolute
                     , Css.top Css.zero
                     , Css.left Css.zero
                     , Css.property "content" "''"
-                    , connectorUnderline (scale - 2)
                     ]
 
               else
@@ -122,14 +131,27 @@ heading scale tag underline attrs children =
         )
         [ Html.span
             [ css
-                [ if underline then
-                    headerUnderline (scale - 2)
+                [ Css.paddingRight (ModularScale.rem 0)
+                , responsive
+                    { desktop =
+                        [ Css.lineHeight (ModularScale.rem (scale + 1))
+                        , Css.fontSize (ModularScale.rem scale)
+                        , if underline then
+                            headerUnderline (scale - 2)
 
-                  else
-                    Css.batch []
-                , Css.lineHeight (ModularScale.rem (scale + 1))
-                , Css.paddingRight (ModularScale.rem 0)
-                , Css.fontSize (ModularScale.rem scale)
+                          else
+                            Css.batch []
+                        ]
+                    , mobile =
+                        [ Css.lineHeight (ModularScale.rem scale)
+                        , Css.fontSize (ModularScale.rem (scale - 1))
+                        , if underline then
+                            headerUnderline (scale - 3)
+
+                          else
+                            Css.batch []
+                        ]
+                    }
                 ]
             ]
             children
@@ -142,8 +164,11 @@ pageTitle attrs children =
         (css
             [ exo2
             , Css.fontSize (ModularScale.rem 0)
-            , Css.paddingLeft (ModularScale.rem 2)
-            , Css.paddingRight (ModularScale.rem -2)
+            , responsivePaddingLeft
+            , responsive
+                { desktop = [ Css.paddingRight (ModularScale.rem -2) ]
+                , mobile = [ Css.paddingRight (ModularScale.rem -1) ]
+                }
             , Css.fontWeight Css.bold
             , Css.display Css.inlineBlock
             , headerUnderline -2
@@ -174,7 +199,11 @@ connectorUnderline scale =
         -- typeface metrics and rounding mean that the lines are not completely
         -- lined up and we need to fudge a bit.
         adjustment =
-            -2
+            if scale == -1 then
+                -1
+
+            else
+                -2
 
         stops =
             [ "rgba(255,255,255,0)"
@@ -205,9 +234,12 @@ blockStyles scale =
         , Css.fontSize (ModularScale.rem scale)
         , Css.lineHeight (ModularScale.rem (scale + 1))
         , Css.marginTop (ModularScale.rem (min 1 (scale + 1)))
-        , Css.marginLeft (ModularScale.rem 2)
         , Css.maxWidth (Css.calc (ModularScale.rem 7.5) Css.plus (ModularScale.rem 2))
-        , Css.marginRight (ModularScale.rem 2)
+        , responsivePaddingLeft
+        , responsive
+            { desktop = [ Css.marginRight (ModularScale.rem 2) ]
+            , mobile = [ Css.marginRight (ModularScale.rem -1) ]
+            }
         , Css.color (Colors.toCss Colors.greyDarkest)
         ]
 
@@ -385,7 +417,8 @@ codeBlock attrs maybeLanguage body =
                 [ Css.fontSize (ModularScale.rem 0)
                 , Css.lineHeight (ModularScale.rem 1)
                 , Css.marginTop (ModularScale.rem 1)
-                , Css.paddingLeft (ModularScale.rem 3)
+                , responsivePaddingLeft
+                , responsiveMaxWidth
                 , Css.maxWidth (Css.calc (ModularScale.rem 7.5) Css.plus (ModularScale.rem 2))
                 , Css.paddingRight (ModularScale.rem 2)
                 , Css.color (Colors.toCss Colors.greyDarkest)
@@ -473,7 +506,10 @@ ol { scale, start, attrs, children } =
                 [ -- list
                   Css.listStyleType Css.decimal
                 , Css.listStylePosition Css.outside
-                , Css.paddingLeft (ModularScale.rem 3.5)
+                , responsive
+                    { desktop = [ Css.paddingLeft (ModularScale.rem 3.5) ]
+                    , mobile = [ Css.paddingLeft (ModularScale.rem 2) ]
+                    }
 
                 -- guts
                 , openSans
@@ -554,3 +590,31 @@ publishedAt when =
             String.fromInt (Time.toYear zone when)
     in
     Html.text (month ++ " " ++ day ++ ", " ++ year)
+
+
+responsive : { desktop : List Style, mobile : List Style } -> Style
+responsive { desktop, mobile } =
+    let
+        cutoff =
+            Css.rem (ModularScale.scale 8.5 + ModularScale.scale 2)
+    in
+    Css.batch
+        [ Media.withMedia [ Media.only Media.screen [ Media.minWidth cutoff ] ] desktop
+        , Media.withMedia [ Media.only Media.screen [ Media.maxWidth cutoff ] ] mobile
+        ]
+
+
+responsivePaddingLeft : Style
+responsivePaddingLeft =
+    responsive
+        { desktop = [ Css.paddingLeft (ModularScale.rem 2) ]
+        , mobile = [ Css.paddingLeft (ModularScale.rem -1) ]
+        }
+
+
+responsiveMaxWidth : Style
+responsiveMaxWidth =
+    responsive
+        { desktop = [ Css.maxWidth (ModularScale.rem 8.5) ]
+        , mobile = [ Css.maxWidth (Css.calc (Css.pct 100) Css.minus (Css.calc (ModularScale.rem -2) Css.plus (ModularScale.rem -2))) ]
+        }
