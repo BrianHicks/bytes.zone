@@ -3,7 +3,7 @@
   "type": "post",
   "title": "Reducing Asset Size With Subsetting",
   "summary": "I reduced the size of my site's fonts by 87% with subsetting!",
-  "published": "2020-02-06T22:14:00",
+  "published": "2020-03-03T00:00:00",
 }
 ---
 
