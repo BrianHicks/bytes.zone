@@ -21,7 +21,6 @@ type Metadata
 
 type IndexCategory
     = Posts
-    | Codes
     | Talks
 
 
@@ -116,9 +115,6 @@ decoder =
                                         "talks" ->
                                             Decode.succeed Talks
 
-                                        "code" ->
-                                            Decode.succeed Codes
-
                                         _ ->
                                             Decode.fail ("Unexpected index category " ++ category)
                                 )
@@ -159,9 +155,6 @@ categoryTitle category =
 
         Talks ->
             "Talks"
-
-        Codes ->
-            "Code"
 
 
 publishedAt : Metadata -> Time.Posix

@@ -1,6 +1,0 @@
----
-{
-  "type": "index",
-  "category": "code"
-}
----

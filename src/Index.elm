@@ -28,9 +28,6 @@ view allPages category =
                 Metadata.Talks ->
                     Pages.pages.talks.directory
 
-                Metadata.Codes ->
-                    Pages.pages.code.directory
-
         pages =
             allPages
                 |> List.filter

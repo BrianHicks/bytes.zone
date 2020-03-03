@@ -376,7 +376,6 @@ pageHeader path =
             [ css [ Css.displayFlex ]
             ]
             [ Html.li [ navLinkStyle ] [ headerLink "posts" pages.posts.directory path ]
-            , Html.li [ navLinkStyle ] [ headerLink "code" pages.code.directory path ]
             , Html.li [ navLinkStyle ] [ headerLink "talks" pages.talks.directory path ]
             ]
         ]
