@@ -8,6 +8,7 @@ import Css.Global
 import Css.Reset as Reset
 import Date
 import Elements
+import Feed
 import Firework exposing (Firework)
 import Head
 import Head.Seo as Seo
@@ -73,9 +74,34 @@ main =
         , manifest = manifest
         , canonicalSiteUrl = canonicalSiteUrl
         , onPageChange = ChangePath
-        , generateFiles = always []
+        , generateFiles = generateFiles
         , internals = Pages.internals
         }
+
+
+generateFiles :
+    List
+        { path : PagePath Pages.PathKey
+        , frontmatter : Metadata
+        , body : String
+        }
+    ->
+        List
+            (Result String
+                { path : List String
+                , content : String
+                }
+            )
+generateFiles pages =
+    [ pages
+        |> Feed.generate
+            { title = "bytes.zone"
+            , tagline = siteTagline
+            , url = [ "posts", "index.xml" ]
+            , siteUrl = canonicalSiteUrl
+            }
+        |> Ok
+    ]
 
 
 markdownDocument : ( String, Pages.Document.DocumentHandler Metadata Rendered )
@@ -251,16 +277,6 @@ pageView model siteMetadata page viewForPage =
             }
 
         Metadata.Post metadata ->
-            { title = metadata.title
-            , body =
-                pageFrame model
-                    page.path
-                    [ Elements.h1 [] [ Html.text metadata.title ]
-                    , viewForPage
-                    ]
-            }
-
-        Metadata.Code metadata ->
             { title = metadata.title
             , body =
                 pageFrame model
@@ -471,28 +487,6 @@ head metadata =
                     , expirationTime = Nothing
                     }
 
-        Metadata.Code meta ->
-            Seo.summaryLarge
-                { canonicalUrlOverride = Nothing
-                , siteName = "bytes.zone"
-                , image =
-                    { url = images.icon
-                    , alt = "bytes.zone logo"
-                    , dimensions = Nothing
-                    , mimeType = Nothing
-                    }
-                , description = siteTagline
-                , locale = Nothing
-                , title = meta.title
-                }
-                |> Seo.article
-                    { tags = []
-                    , section = Nothing
-                    , publishedTime = Nothing
-                    , modifiedTime = Nothing
-                    , expirationTime = Nothing
-                    }
-
         Metadata.Talk meta ->
             Seo.summaryLarge
                 { canonicalUrlOverride = Nothing
@@ -534,7 +528,7 @@ head metadata =
 
 canonicalSiteUrl : String
 canonicalSiteUrl =
-    "https://bytes.zone/"
+    "https://bytes.zone"
 
 
 siteTagline : String

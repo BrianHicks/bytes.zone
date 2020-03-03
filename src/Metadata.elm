@@ -14,7 +14,6 @@ type Metadata
     = Page PageMetadata
     | HomePage HomePageMetadata
     | Post PostMetadata
-    | Code CodeMetadata
     | Talk TalkMetadata
     | Index IndexCategory
 
@@ -30,15 +29,12 @@ type alias HomePageMetadata =
 
 type alias PageMetadata =
     { title : String
+    , summary : Maybe String
     , publishedAt : Time.Posix
     }
 
 
 type alias PostMetadata =
-    PageMetadata
-
-
-type alias CodeMetadata =
     PageMetadata
 
 
@@ -55,41 +51,34 @@ decoder =
             (\pageType ->
                 case pageType of
                     "page" ->
-                        Decode.map2
-                            (\title_ publishedAt_ ->
+                        Decode.map3
+                            (\title_ publishedAt_ summary_ ->
                                 Page
                                     { title = title_
                                     , publishedAt = publishedAt_
+                                    , summary = summary_
                                     }
                             )
                             (Decode.field "title" Decode.string)
                             (Decode.field "updated" Iso8601.decoder)
+                            (Decode.maybe (Decode.field "summary" Decode.string))
 
                     "homepage" ->
                         Decode.field "title" Decode.string
                             |> Decode.map (\title_ -> HomePage { title = title_ })
 
                     "post" ->
-                        Decode.map2
-                            (\title_ publishedAt_ ->
+                        Decode.map3
+                            (\title_ publishedAt_ summary_ ->
                                 Post
                                     { title = title_
                                     , publishedAt = publishedAt_
+                                    , summary = summary_
                                     }
                             )
                             (Decode.field "title" Decode.string)
                             (Decode.field "published" Iso8601.decoder)
-
-                    "code" ->
-                        Decode.map2
-                            (\title_ publishedAt_ ->
-                                Code
-                                    { title = title_
-                                    , publishedAt = publishedAt_
-                                    }
-                            )
-                            (Decode.field "title" Decode.string)
-                            (Decode.field "published" Iso8601.decoder)
+                            (Decode.maybe (Decode.field "summary" Decode.string))
 
                     "talk" ->
                         Decode.map3
@@ -137,9 +126,6 @@ title metadata =
         Post pageMeta ->
             pageMeta.title
 
-        Code pageMeta ->
-            pageMeta.title
-
         HomePage pageMeta ->
             pageMeta.title
 
@@ -167,9 +153,6 @@ publishedAt metadata =
             pageMeta.publishedAt
 
         Post pageMeta ->
-            pageMeta.publishedAt
-
-        Code pageMeta ->
             pageMeta.publishedAt
 
         HomePage pageMeta ->

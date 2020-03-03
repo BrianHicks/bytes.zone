@@ -31,9 +31,6 @@ view siteMetadata pageMetadata rendered =
                             Metadata.Post meta ->
                                 { latest | post = Just ( link, meta ) }
 
-                            Metadata.Code meta ->
-                                { latest | code = Just ( link, meta ) }
-
                             Metadata.Talk meta ->
                                 { latest | talk = Just ( link, meta ) }
 
