@@ -459,7 +459,7 @@ head metadata =
                     , dimensions = Nothing
                     , mimeType = Nothing
                     }
-                , description = siteTagline
+                , description = Maybe.withDefault siteTagline meta.summary
                 , locale = Nothing
                 , title = meta.title
                 }
@@ -475,7 +475,7 @@ head metadata =
                     , dimensions = Nothing
                     , mimeType = Nothing
                     }
-                , description = siteTagline
+                , description = Maybe.withDefault siteTagline meta.summary
                 , locale = Nothing
                 , title = meta.title
                 }
