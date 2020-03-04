@@ -28,9 +28,9 @@ I don't like that difference, so let's see if we can make them smaller!
 
 But what's in those files anyway?
 Why are they so big?
-Consider [Exo 2](https://github.com/NDISCOVER/Exo-2.0), my heading font: in addition to the normal ASCII characters, it has a ton of Greek, Cyrillyic, and Vietnamese characters.
+Consider [Exo 2](https://github.com/NDISCOVER/Exo-2.0), my heading font: in addition to the normal ASCII characters, it has a ton of Greek, Cyrillic, and Vietnamese characters.
 This is great!
-Tons of people speaking all kinds of languages can use this font to communicate… but I never use those characters on *my* site, so why should I serve them?
+Tons of people speaking all kinds of languages can use this font to communicate… but I never use those characters on my site, so I don't get any value out of including them.
 
 Fortunately, this is a known problem, and we can solve it with something called [subsetting](https://en.wikipedia.org/wiki/Subsetting).
 Subsetting, in general, is where you retrieve only the parts you need from a large data set.
