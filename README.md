@@ -1,33 +1,17 @@
-# elm-pages-starter
+# bytes.zone
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/dillonkearns/elm-pages-starter)
+This is the code to produce [bytes.zone](https://bytes.zone).
 
-This is an example repo to get you up and running with `elm-pages`.
+## Working Locally
 
-The entrypoint file is `index.js`. That file imports `src/Main.elm`. The `content` folder is turned into your static pages. The rest is mostly determined by logic in the Elm code! Learn more with the resources below.
+1. have `nix` installed (it's available for MacOS and Linux)
+2. have `direnv` installed
+3. `git clone`, `cd` into it, and run `direnv allow` to get the base dependencies
+4. `npm install` to get the node dependencies
+5. run `elm-pages develop` and start making changes.
 
-## Setup Instructions
-Click "Use this template" on this Github page to fork the repo.
+## Deploying to Netlify
 
-Or git clone it:
-
-```
-git clone git@github.com:dillonkearns/elm-pages-starter.git
-```
-
-Then install and run the dev server
-
-```
-cd elm-pages-starter
-npm install
-npm start # starts a local dev server using `elm-pages develop`
-```
-
-From there you can tweak the `content` folder or change the `src/Main.elm` file.
-
-
-## Learn more about `elm-pages`
-
-- Documentation site: https://elm-pages.com
-- [Elm Package docs](https://package.elm-lang.org/packages/dillonkearns/elm-pages/latest/)
-- [`elm-pages` blog](https://elm-pages.com/blog)
+`git push` deploys to Netlify by default.
+Configuration lives in `netlify.toml`.
+Netlify *should* take care of all dependency installation, but it may need some massaging on a case-by-case basis.
