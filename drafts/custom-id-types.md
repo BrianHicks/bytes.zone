@@ -172,3 +172,10 @@ But with these tradeoffs:
 
 - You have to be disciplined about not deconstructing/matching against IDs in places where it wouldn't make sense to take responsibility for constructing them.
 - To get IDs in records (as opposed to just in `Dict`s or whatever) you have to do a (small) type trick.
+
+So would I use this again?
+As usual, *maybe*!
+
+I think I would avoid using this in a project where I didn't have a high confidence that my fellow programmers knew the intent of the module.
+That means that I wouldn't to publish a package using this, or contribute code to a high-traffic open source repo using this pattern.
+But on my team, in private code, or in small apps that I build for myself, I'll definitely be coming back to this!
