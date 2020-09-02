@@ -1,16 +1,18 @@
 ---
 {
   "type": "post",
-  "title": "Reusable ID Types with Phantom Typing",
+  "title": "Reusable Phantom ID Types",
   "summary": "A nice middle ground between custom IDs everywhere and using Ints or whatever.",
   "published": "2020-08-31T00:00:00-05:00",
 }
 ---
 
-In Elm, we usually define a record for a remote resource like this:
+In Elm, we often define modules for records like this:
 
 ```elm
 module Cat exposing (Cat)
+
+import Json.Decode as Decode exposing (Decoder)
 
 
 type alias Cat =
@@ -18,17 +20,29 @@ type alias Cat =
     , name : String
     , purriness : Int
     }
+
+
+decoder : Decoder Cat
+decoder =
+    Decode.map3 Cat
+        (Decode.field "id" Decode.string)
+        (Decode.field "name" Decode.string)
+        (Decode.field "purriness" Decode.int)
 ```
 
-This has a problem, though: you can do *whatever* with that ID string.
-Concatenate them? Yup.
-Regex match? Why not?
+We might construct instances of `Cat` by hand (say for some view state) but more often we load them from a server (which is why we have `decoder` there too.)
 
-But most importantly to me, this doesn't give you any assurance at the compiler level that the thing you're using (a `String`) is actually an identifier for a `Cat`.
-That means that you can switch `id` and `name` and the compiler will say it's all good.
-Primitive obsession strikes again!
+But regardless, this has a problem: you can do *whatever* with that ID string.
+Concatenate it with another one?
+Yup.
+Regex match?
+Why not!
+Using a `String` here means that the compiler can't tell you if you're using the `id` in the way it was intended to be used.
 
-The usual way to deal with this is to wrap in a custom opaque ID type (note how we're not exposing constructors here):
+## The First Pass Fix
+
+So we have a problem, but we can fix it.
+When facing this in Elm, we can make a custom opaque ID type (note the hidden constructor):
 
 ```elm
 module Cat exposing (CatId, Cat)
@@ -43,18 +57,18 @@ type alias Cat =
     , name : String
     , purriness : Int
     }
+
+
+decoder : Decoder Cat
+decoder =
+    Decode.map3 Cat
+        (Decode.field "id" (Decode.map CatId Decode.string))
+        (Decode.field "name" Decode.string)
+        (Decode.field "purriness" Decode.int)
 ```
 
-Then to get around the `comparable` requirement for dictionaries you use a special package (there are many, but I like `rtfeldman/elm-sorter-experiment`):
-
-```elm
-idSorter : Sorter CatId
-idSorter =
-    Sort.by (\(CatId id) -> id) Sort.alphabetical
-```
-
-Now you can store them again, but the compiler will complain if you use a `CatId` where you need a `DogId`.
-For example, you can now define a helper that builds a path for HTTP requests while disallowing invalid IDs:
+Now we cannot do arbitrary `String` operations on IDs, and we can specify IDs in signatures as well.
+For example, we could define the route to get a `Cat` in our API:
 
 ```elm
 apiRoute : CatId -> String
@@ -62,19 +76,50 @@ apiRoute (CatId id) =
     Url.Builder.absolute [ "api", "cats", id ] []
 ```
 
+Passing anything other than a `CatId` to this function will cause a friendly compiler error along the lines of "You gave me a `String`, but I need a `CatId`."
+
+In addition, we outlawed arbitrary creation of IDs by hiding the constructor.
+They can only come from decoding a `Cat` from `decoder`, giving us at least some reason to believe that our frontend code handles IDs responsibly.
+
+I like this *a lot* better already, but I'm not going to go into more benefits here since I want to get to other points in the design space.
+(If you're unfamiliar with this technique, search for "primitive obsession" to see more examples. Learning about this will help you write better code!)
+
+## Drawbacks of the Hidden-Constructor Custom Types
+
+Even though we've made significant improvements to our code, they don't come for free.
+
+First of all, we can no longer construct values of `Cat` in tests without deserializing some hand-coded JSON plus handling the error case.
+This means that our tests are way more complex, plus they're now tied to the `decoder` instead of just the details we want to verify.
+I've seen people argue in favor of this approach, but increasing the failure points of a test always makes me uneasy.
+
+Second, due to Elm's design decisions you can't use `CatId` where the compiler expects something matching `comparable`.
+This shows up pretty frequently because ideally we'd have fast (`O(log n)`) lookups by key in our cat collection and most implementations (like `elm/core`'s `Dict`) need to compare items to do a binary search.
+
+But good news: the Elm community know about this (hopefully temporary) problem and has published a bunch of different packages to help get around it.
+I like `rtfeldman/elm-sorter-experiment`, which asks us to define a custom sorter function and pass it to dictionary and set constructors.
+For `CatId`, that looks like this:
+
+```elm
+idSorter : Sorter CatId
+idSorter =
+    Sort.by (\(CatId id) -> id) Sort.alphabetical
+```
+
+Now we can construct dictionaries and sets containing `CatId` for fast lookups and still get the type safety in the keys.
+
 So far so good, right?
-But this pattern has a big downside: you need to define `FooId`, `idSorter`, and probably `idDecoder` for every single resource type in your application.
-Most of these definitions will be super similar.
+But this pattern has one last downside: you need to define `FooId`, `idSorter`, and (usually) `idDecoder` for every single resource type in your application.
+Most of those definitions will look exactly the same except for the name of the type, and while I'm not against boilerplate as a whole (in fact, yay for being explicit!) this particular usage really annoys me.
+Because I only define the functions I need when I need them, this appraoch tends to lead to many-file refactorings and leaves hanger-on functions if I forget I added something.
 
-While I'm not against boilerplate as a whole (in fact, yay for being explicit!) this particular usage really annoys me.
-It adds friction to working with remote resources, especially if you don't define all the "normal" functions everywhere.
-This tend to lead to scattered refactorings and hanger-on functions in the middle of refactorings.
+## Another Approach: Phantom Types!
 
-But recently I was building a little app for my son to learn his letters and decided to see if I could find a nicer way in a constrained single-developer environment.
-My goal was to find something in between the wild wild west of using primitives directly and the boilerplate-y repetition of defining ID types for every resource.
+Recently I built a little game for my son to learn his letters and decided to see if I could find a nicer way to solve id-as-string problem.
+My goal was to find something in between the wild wild west of using primitives directly and the repetition of defining ID types for every resource.
 
 And, I think I did!
-The key was to use phantom types (that is, types with a variable that appears in the definition but not any of the constructors.)
+The key insight: you can make a reusable ID type by using phantom types (that is, types with a variable that appears in the definition but not any of the constructors.)
+
 Let's see how it works:
 
 ```elm
@@ -121,13 +166,19 @@ decoder =
         (Decode.field "adoptableCats" (Decode.list Id.decoder))
 ```
 
-BUT there's a tradeoff here: you can't embed the ID of a record in the record (doing so would be a recursive definition.)
-This doesn't matter for my use case (all IDs are external or in routes where I can correlate them with records easily) but if you need it, it's not bad to work around while still getting the reusable decoder/sorter:
+Of course, this improvement still doesn't come for free.
+`Id thing` is still not `comparable` so the sorter (or equivalent in your package of choice) is required.
+
+You also lose some of the assurance that you're not constructing or matching on `Id` in places where you shouldn't be.
+To put it another way, you can make a bad ID pretty easily: just call `Id "a hot dog is a salad"`.
+
+You also can't embed the ID of a record in the record itself (doing so would be a recursive definition.)
+I managed to get around needing this in my alphabet game, but if you need it, you just need a little type trick:
 
 ```elm
 module Cat exposing (Id, Cat, decoder)
 
-import Id exposing (Id(..))
+import Id
 import Json.Decode exposing (Decoder)
 
 
@@ -139,7 +190,7 @@ type CatId
 
 
 type alias Id =
-    Id CatId
+    Id.Id CatId
 
 
 type alias Cat =
@@ -163,17 +214,19 @@ apiRoute (Id id) =
 ```
 
 And there you have it!
-With this technique, you get:
+
+So to sum up: with this technique, you get...
 
 - nice type-checking and good errors (with really obvious fixes, like "you have a `Id Dog` but you need an `Id Cat`.")
-- reasonable reuse with global-ish
+- reasonable reuse patterns
 
 But with these tradeoffs:
 
+- You have to deal with `comparable` not being extendable by custom types.
 - You have to be disciplined about not deconstructing/matching against IDs in places where it wouldn't make sense to take responsibility for constructing them.
-- To get IDs in records (as opposed to just in `Dict`s or whatever) you have to do a (small) type trick.
+- To get IDs in the records themselves (as opposed to just in `Dict`s or whatever) you have to do a (small) type trick.
 
-So would I use this again?
+So would I do this again?
 As usual, *maybe*!
 
 I think I would avoid using this in a project where I didn't have a high confidence that my fellow programmers knew the intent of the module.
