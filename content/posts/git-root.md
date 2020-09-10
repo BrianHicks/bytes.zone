@@ -1,9 +1,9 @@
 ---
 {
   "type": "post",
-  "title": git root"",
+  "title": "git root",
   "summary": "getting back to the root of a project quickly",
-  "published": "2020-08-31T00:00:00-05:00",
+  "published": "2020-09-10T09:32:00-05:00",
 }
 ---
 
