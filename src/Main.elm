@@ -282,6 +282,9 @@ pageView model siteMetadata page viewForPage =
                 pageFrame model
                     page.path
                     [ Elements.h1 [] [ Html.text metadata.title ]
+                    , Elements.p 0
+                        [ css [ Css.fontStyle Css.italic ] ]
+                        [ Elements.publishedAt metadata.publishedAt ]
                     , viewForPage
                     ]
             }
