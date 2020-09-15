@@ -1,4 +1,4 @@
-module Metadata exposing (HomePageMetadata, IndexCategory(..), Metadata(..), PageMetadata, categoryTitle, decoder, publishedAt, title)
+module Metadata exposing (HomePageMetadata, IndexCategory(..), Metadata(..), PageMetadata, categoryTitle, decoder, publishedAt, summary, title)
 
 import Date exposing (Date)
 import Dict exposing (Dict)
@@ -160,3 +160,22 @@ publishedAt metadata =
 
         Index category ->
             Time.millisToPosix 0
+
+
+summary : Metadata -> Maybe String
+summary metadata =
+    case metadata of
+        Talk _ ->
+            Nothing
+
+        Page pageMeta ->
+            pageMeta.summary
+
+        Post pageMeta ->
+            pageMeta.summary
+
+        HomePage _ ->
+            Nothing
+
+        Index _ ->
+            Nothing

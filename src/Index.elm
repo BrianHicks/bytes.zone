@@ -61,8 +61,18 @@ view allPages category =
                                 _ ->
                                     Html.text ""
                             ]
-                        , Html.text "published "
-                        , Elements.publishedAt (Metadata.publishedAt page)
+                        , Html.p [ css [ Css.fontStyle Css.italic ] ]
+                            [ Html.text "published "
+                            , Elements.publishedAt (Metadata.publishedAt page)
+                            ]
+                        , case Metadata.summary page of
+                            Just summary ->
+                                Html.p
+                                    [ css [ Css.marginTop (ModularScale.rem -0.5) ] ]
+                                    [ Html.text summary ]
+
+                            Nothing ->
+                                Html.text ""
                         ]
                 )
             |> Html.div []
