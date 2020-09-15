@@ -63,3 +63,5 @@ I'd call that a win for just a little time spent modeling!
 
 (oh, and bonus: if you're using Elm, the 1-dimensional form here is probably pretty familiar.
 "Input, Current State, Next State, Output" does the same job as `update : msg -> model -> ( model, Cmd msg )`!)
+
+TODO: mention that you can change the dimensions (current state / next state) to make it clearer that there's some missing input here.
