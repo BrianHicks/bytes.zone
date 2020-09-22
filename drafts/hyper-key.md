@@ -7,20 +7,20 @@
 }
 ---
 
-Have you ever noticed that no app is brave/foolish enough to bind a default keyboard shortcut to shift+control+option+command+whatever?
-That means you have a global keybinding prefix that will basically never have any conflicts!
-[Some people](TODO: Brett Terpstra link?) call this the hyper key.
+Have you ever noticed that no app binds a default keyboard shortcut to shift+control+option+command+whatever?
+That means you have a potential global keybinding prefix that will never have any conflicts!
+[Brett Terpstra calls this the hyper key](https://brettterpstra.com/2012/12/08/a-useful-caps-lock-key/).
 I like that!
 
-Since this is hard to hit (which, well, that's why nobody uses it by default) I have this bound to a special key on my Kinesis (TODO: link config)
+Since this is hard to hit (which, well, that's why nobody uses it by default) I have this bound to [a special key on my Kinesis](https://gist.github.com/BrianHicks/26b5c7739d909061f91432bd78897218).
 Here are some goodies I get:
 
-- hyper + arrow: move a window to the left/top/right/bottom half of my screen with [Divvy](TODO link)
-- hyper + space: open [Things](TODO: link)' quick input
-- hyper + semicolon: open Things' [quick input with autofill](TODO: link)
-- hyper + j: open the link for my next meeting with [Next Meeting](TODO: link)
-- hyper + enter: jump to [Dash](TODO: link)
-- hyper + ': jump to [iTerm2](TODO: link)
+- hyper + arrow: move a window to the left/top/right/bottom half of my screen with [Divvy](https://mizage.com/divvy/)
+- hyper + space: open [Things](http://culturedcode.com/things/)' quick input
+- hyper + semicolon: open Things' [quick input with autofill](https://culturedcode.com/things/mac/help/things-sandboxing-helper-things3/)
+- hyper + j: open the link for my next meeting with [Next Meeting](https://apps.apple.com/us/app/next-meeting/id1017470484?mt=12)
+- hyper + enter: jump to [Dash](https://kapeli.com/dash)
+- hyper + ': jump to [iTerm2](https://iterm2.com)
 
 There are a few more I have bound (fullscreen, middle-of-screen shortcuts) but those are the main ones.
 I've found them really handy over the years.
