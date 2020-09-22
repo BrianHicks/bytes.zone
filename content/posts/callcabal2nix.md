@@ -3,7 +3,7 @@
   "type": "post",
   "title": "callCabal2nix",
   "summary": "you don't have to run cabal2nix all the time. There's a function to do it for you!",
-  "published": "2020-08-31T00:00:00-05:00",
+  "published": "2020-09-22T11:04:00-05:00",
 }
 ---
 
