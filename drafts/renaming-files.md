@@ -12,12 +12,13 @@ Bash, ZSH, and other shells will expand comma-sepated arguments surrounded by br
 
 As an altogether contrived example, imagine you want to echo "cat car can" in the terminal.
 You could write `echo cat car can`, right?
-But then, maybe you notice you're writing `ca` twice.
+But then you'd be writing `ca` twice.
 That won't do!
 We must be **maximally efficient**!
 
 We can use brace expansion to only write `ca` once: `echo ca{t,r,n}`.
 The shell will expand that to your original "cat car can."
+Ta-da!
 
 Next, say you want to add "bat bar ban" to the output.
 Good news: the shell will expand more than one set of braces in the same word!
