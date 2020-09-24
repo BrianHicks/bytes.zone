@@ -1,8 +1,8 @@
 ---
 {
   "type": "post",
-  "title": "state-transition tables and update functions",
-  "summary": "Elm's update functions are also secretly state transition tables.",
+  "title": "state-transition tables",
+  "summary": "A simple exercise to check our thinking about state.",
   "published": "2020-08-31T00:00:00-05:00",
 }
 ---
