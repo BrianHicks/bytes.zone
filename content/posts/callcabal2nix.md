@@ -11,7 +11,7 @@ When you're setting up a Haskell project in Nix, most advice says "call `cabal i
 
 But it turns out you don't have to run `cabal2nix` by hand to keep it up to date!
 [`pkgs.haskellPackages.callCabal2nix`](https://github.com/NixOS/nixpkgs/blob/34f475f5eae13d18b4e4b8a17aa7a772d8619b0b/pkgs/development/haskell-modules/make-package-set.nix#L216) does the same thing as `cabal2nix`, but without writing a file.
-Unfortunately, the nixpkgs manual doesn't mention it in any way, so hopefully this post can serve as a reference until it makes it into the docs.
+The nixpkgs manual doesn't mention it since it uses import-from-derivation, [which can cause some problems with Hydra](https://github.com/NixOS/nixpkgs/issues/16130#issuecomment-229939552) but I've found it super helpful so I'm writing it up!
 If you need more detail than what I've written here, [diving into the source is probably your best bet](https://github.com/NixOS/nixpkgs/blob/34f475f5eae13d18b4e4b8a17aa7a772d8619b0b/pkgs/development/haskell-modules/make-package-set.nix#L216).
 
 The basic usage: call `pkgs.haskellPackages.callCabal2nix` (note the lowercase `n` in `nix`) with...
