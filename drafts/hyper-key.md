@@ -12,10 +12,10 @@ That means you have a potential global keybinding prefix that will never have an
 [Brett Terpstra calls this the hyper key](https://brettterpstra.com/2012/12/08/a-useful-caps-lock-key/).
 I like that!
 
-Since this is hard to hit (which, well, that's why nobody uses it by default) I have this bound to [a special key on my Kinesis](https://gist.github.com/BrianHicks/26b5c7739d909061f91432bd78897218).
+Since this is hard to hit (which, well, that's why nobody uses it by default) I have this bound to [a special key on my Kinesis](https://gist.github.com/BrianHicks/26b5c7739d909061f91432bd78897218), but I find it acceptable to use on my normal laptop QWERTY keyboard too.
 Here are some goodies I get:
 
-- hyper + arrow: move a window to the left/top/right/bottom half of my screen with [Divvy](https://mizage.com/divvy/)
+- hyper + arrow: move a window to the top/right/bottom/left half of my screen with [Divvy](https://mizage.com/divvy/)
 - hyper + space: open [Things](http://culturedcode.com/things/)' quick input
 - hyper + semicolon: open Things' [quick input with autofill](https://culturedcode.com/things/mac/help/things-sandboxing-helper-things3/)
 - hyper + j: open the link for my next meeting with [Next Meeting](https://apps.apple.com/us/app/next-meeting/id1017470484?mt=12)
