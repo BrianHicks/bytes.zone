@@ -14,7 +14,8 @@ TODO: link to older post
 Recently I built a little game for my son to learn his letters and decided to see if I could find a nicer way to solve id-as-string problem.
 My goal was to find something in between the wild wild west of using primitives directly and the repetition of defining ID types for every resource.
 
-And, I think I did!
+Anyway, I found something new to me.
+Maybe it'll be useful to you, too!
 The key insight: you can make a reusable ID type by using phantom types (that is, types with a variable that appears in the definition but not any of the constructors.)
 
 Let's see how it works:
@@ -64,7 +65,7 @@ decoder =
 ```
 
 Of course, this improvement still doesn't come for free.
-`Id thing` is still not `comparable` so the sorter (or equivalent in your package of choice) is required.
+`Id thing` is still not `comparable` so you need a workaround if you want to use it in a `Dict` or `Set`.
 
 You also lose some of the assurance that you're not constructing or matching on `Id` in places where you shouldn't be.
 To put it another way, you can make a bad ID pretty easily: just call `Id "a hot dog is a salad"`.
