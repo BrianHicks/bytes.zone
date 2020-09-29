@@ -16,15 +16,15 @@ Wikipedia shows some pretty abstract tables, so I'm going to model a vending mac
 To simplify things, we'll serve a single drink for a single quarter.
 The idealized version of the interaction with this machine (the "happy path") is:
 
-1. put a quarter in
-2. press the button for the drink you want
-3. get the drink
+1. Put a quarter in
+2. Press the button for the drink you want
+3. Get the drink
 
-To implement this, we have to manage two independent pieces of state: whether you've put money in the machine and if it has at least one drink left to vend.
+To implement this, we have to manage two independent pieces of state: whether you've put money in the machine and whether it has at least one drink left to vend.
 
 Let's model the interaction above with a one-dimensional state-transition table.
-This form keeps the modeling as simple as possible while still capturing enough detail to be useful: we have a column each for input, state, next state, and output.
-To find out what happens after an event, you just find the input and current state rows you care about and look at the matching next state and output.
+Using only one dimension keeps the modeling as simple as possible while still capturing enough detail to be useful: we have a column each for input, state, next state, and output.
+To find out what happens after an event you just find the input and current state rows you care about and look at the matching next state and output.
 For our vending machine, it might look like this:
 
 | Input          | Current State           | Next State              | Output     |
@@ -39,7 +39,7 @@ To figure out where we have holes, we need to add more dimensions.
 If we reorganize our states and inputs along along the axes of a table, we get a two-dimensional state-transition table.
 According to Wikipedia, these are the more common form, and we'll see why!
 
-To read this table, match the current state along one axis with the input along the other.
+To read this table, match the current state along the vertical axis with the input along the horizontal.
 Our next state and output live in the intersections (I've separated them with a `/`):
 
 | ↓ Current State / Input → | Insert Quarter                    | Hit Button                         |
@@ -67,10 +67,10 @@ But when we fill things out, we can see that we have a potentially weird situati
 The state machine should prevent that, since there's no new state field that could create this situation.
 But it's feasible to get there either via programming (for example, by modeling the state as two independent fields) or hardware issues (for example, someone prying open the machine to leave quarters in an atypical act of vandalism.)
 
-Our modeling has revealed this way before we got to the code parts of our application, and the hardest part was making a table and looking for empty cells.
+Our modeling has revealed this undefined behavior way before we got to the code parts of our application, and the hardest part was making a table and looking for empty cells.
 Now I can take this same table to a stakeholder or domain expert and have a productive conversation about what they think should happen.
 
 I'd call that a win for just a little time spent modeling!
 
-(oh, and bonus: if you're using Elm, the 1-dimensional form here is probably pretty familiar.
+(oh, and bonus: if you're using Elm, the one-dimensional form here is probably pretty familiar.
 "Input, Current State, Next State, Output" does the same job as `update : msg -> model -> ( model, Cmd msg )`!)
