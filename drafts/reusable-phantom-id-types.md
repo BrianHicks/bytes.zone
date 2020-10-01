@@ -1,24 +1,23 @@
 ---
 {
   "type": "post",
-  "title": "Reusable Phantom ID Types",
-  "summary": "A nice middle ground between custom IDs everywhere and using Ints or whatever.",
+  "title": "Phantom ID Types",
+  "summary": "Another point in the design space of avoiding primitive obsession in IDs.",
   "published": "2020-08-31T00:00:00-05:00",
 }
 ---
 
-TODO: link to older post
-
-## Another Approach: Phantom Types!
+I previously wrote about tradeoffs of custom ID types in Elm, and promised to explore a few more points in the space.
+This is one!
 
 Recently I built a little game for my son to learn his letters and decided to see if I could find a nicer way to solve id-as-string problem.
-My goal was to find something in between the wild wild west of using primitives directly and the repetition of defining ID types for every resource.
+My goal was to find something in between the wild wild west of using `String`s directly and the repetition of defining ID types for every resource.
 
 Anyway, I found something new to me.
 Maybe it'll be useful to you, too!
-The key insight: you can make a reusable ID type by using phantom types (that is, types with a variable that appears in the definition but not any of the constructors.)
+The key insight: **you can make a reusable ID type by using phantom types** (that is, types with a variable that appears in the definition but not any of the constructors.)
 
-Let's see how it works:
+Let's define a module for our IDs:
 
 ```elm
 module Id exposing (Id(..), decoder, sorter)
@@ -69,9 +68,11 @@ Of course, this improvement still doesn't come for free.
 
 You also lose some of the assurance that you're not constructing or matching on `Id` in places where you shouldn't be.
 To put it another way, you can make a bad ID pretty easily: just call `Id "a hot dog is a salad"`.
+Because the type is not used in the constructor, that's a valid *whatever*... `Id Cat`, `Id Dog`, it's all the same to the constructor.
 
 You also can't embed the ID of a record in the record itself (doing so would be a recursive definition.)
-I managed to get around needing this in my alphabet game, but if you need it, you just need a little type trick:
+I managed to get around needing this in my alphabet game (records do not need to refer to themselves because whenever they're displayed there's another piece of data containing the ID.)
+If you need it, you just do a little type trick:
 
 ```elm
 module Cat exposing (Id, Cat, decoder)
@@ -104,11 +105,6 @@ decoder =
         (Decode.field "id" Id.decoder)
         (Decode.field "name" Decode.string)
         (Decode.field "purriness" Decode.int)
-
-
-apiRoute : Id -> String
-apiRoute (Id id) =
-    Url.Builder.absolute [ "api", "cats", id ] []
 ```
 
 And there you have it!
@@ -116,7 +112,7 @@ And there you have it!
 So to sum up: with this technique, you get...
 
 - nice type-checking and good errors (with really obvious fixes, like "you have a `Id Dog` but you need an `Id Cat`.")
-- reasonable reuse patterns
+- reasonable levels of code reuse
 
 But with these tradeoffs:
 
@@ -125,8 +121,8 @@ But with these tradeoffs:
 - To get IDs in the records themselves (as opposed to just in `Dict`s or whatever) you have to do a (small) type trick.
 
 So would I do this again?
-As usual, *maybe*!
+It's a big maybe!
 
 I think I would avoid using this in a project where I didn't have a high confidence that my fellow programmers knew the intent of the module.
 That means that I wouldn't to publish a package using this, or contribute code to a high-traffic open source repo using this pattern.
-But on my team, in private code, or in small apps that I build for myself, I'll definitely be coming back to this!
+But on my work team in private code, or in small apps that I build for myself, I'll definitely be coming back to this!
