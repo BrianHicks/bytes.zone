@@ -1,4 +1,4 @@
-# bytes.zone
+# bytes.zone : An Amazing Project
 
 This is the code to produce [bytes.zone](https://bytes.zone).
 
