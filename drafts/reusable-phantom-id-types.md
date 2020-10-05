@@ -7,7 +7,7 @@
 }
 ---
 
-I previously wrote about tradeoffs of custom ID types in Elm, and promised to explore a few more points in the space.
+I previously wrote about tradeoffs of custom ID types in Elm, and promised to explore a few points in the space.
 This is one!
 
 Recently I built a little game for my son to learn his letters and decided to see if I could find a nicer way to solve id-as-string problem.
@@ -15,7 +15,7 @@ My goal was to find something in between the wild wild west of using `String`s d
 
 Anyway, I found something new to me.
 Maybe it'll be useful to you, too!
-The key insight: **you can make a reusable ID type by using phantom types** (that is, types with a variable that appears in the definition but not any of the constructors.)
+The gist: **you can make a reusable ID type by using phantom types** (that is, types with a variable that appears in the definition but not any of the constructors.)
 
 Let's define a module for our IDs:
 
@@ -64,7 +64,7 @@ decoder =
 ```
 
 Of course, this improvement still doesn't come for free.
-`Id thing` is still not `comparable` so you need a workaround if you want to use it in a `Dict` or `Set`.
+`Id thing` is still not `comparable` so you need a workaround if you want to use it in a `Dict` or `Set` (`sorter` above.)
 
 You also lose some of the assurance that you're not constructing or matching on `Id` in places where you shouldn't be.
 To put it another way, you can make a bad ID pretty easily: just call `Id "a hot dog is a salad"`.
@@ -107,18 +107,20 @@ decoder =
         (Decode.field "purriness" Decode.int)
 ```
 
-And there you have it!
+All the instances of `CatId` should be erased during compilation.
+That is, they shouldn't end up adding any weight to your compiled JavaScript!
 
-So to sum up: with this technique, you get...
+And there you have it!
+To sum up: with this technique, you get the normal stuff you get by using custom types as IDs, like:
 
 - nice type-checking and good errors (with really obvious fixes, like "you have a `Id Dog` but you need an `Id Cat`.")
 - reasonable levels of code reuse
 
 But with these tradeoffs:
 
-- You have to deal with `comparable` not being extendable by custom types.
+- You have to deal with `comparable` not being extendable by custom types (which is true without a phantom type, too.)
 - You have to be disciplined about not deconstructing/matching against IDs in places where it wouldn't make sense to take responsibility for constructing them.
-- To get IDs in the records themselves (as opposed to just in `Dict`s or whatever) you have to do a (small) type trick.
+- To get IDs in the records themselves (as opposed to just in `Dict`s or whatever) you have to do a type trick.
 
 So would I do this again?
 It's a big maybe!
