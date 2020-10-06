@@ -3,7 +3,7 @@
   "type": "post",
   "title": "Fuzzy Finding with Levenstein Distance",
   "summary": "fuzzy find other files based on names most similar to the one you're editing",
-  "published": "2020-08-31T00:00:00-05:00",
+  "published": "2020-10-06T08:18:00",
 }
 ---
 
