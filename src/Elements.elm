@@ -8,7 +8,7 @@ import Css.Media as Media
 import Html.Styled as Html exposing (Attribute, Html)
 import Html.Styled.Attributes as Attr exposing (css)
 import Markdown.Html
-import Markdown.Parser exposing (Renderer)
+import Markdown.Parser exposing (ListItem(..), Renderer)
 import ModularScale
 import SyntaxHighlight
 import Time
@@ -37,7 +37,7 @@ renderer =
     , italic = \text -> em [] [ Html.text text ]
     , link = \{ title, destination } caption -> Ok (a [ Attr.href destination, Attr.title (Maybe.withDefault "" title) ] caption)
     , image = \_ _ -> Ok (Html.text "image")
-    , unorderedList = \_ -> Html.text "unordered list"
+    , unorderedList = ul 0
     , orderedList =
         \start items ->
             ol
@@ -522,6 +522,32 @@ ol { scale, start, attrs, children } =
                 ]
                 :: attrs
             )
+
+
+ul : Float -> List (ListItem (Html msg)) -> Html msg
+ul scale children =
+    children
+        |> List.map (\(ListItem _ children_) -> Html.li [] children_)
+        |> Html.ul
+            [ css
+                [ -- list
+                  Css.listStyleType Css.disc
+                , Css.listStylePosition Css.outside
+                , responsive
+                    { desktop = [ Css.paddingLeft (ModularScale.rem 3.5) ]
+                    , mobile = [ Css.paddingLeft (ModularScale.rem 2) ]
+                    }
+
+                -- guts
+                , openSans
+                , Css.fontSize (ModularScale.rem scale)
+                , Css.lineHeight (ModularScale.rem (scale + 1))
+                , Css.marginTop (ModularScale.rem (min 1 (scale + 1)))
+                , Css.maxWidth (Css.calc (ModularScale.rem 7.5) Css.plus (ModularScale.rem 2))
+                , Css.marginRight (ModularScale.rem 2)
+                , Css.color (Colors.toCss Colors.greyDarkest)
+                ]
+            ]
 
 
 code : List (Attribute msg) -> List (Html msg) -> Html msg
