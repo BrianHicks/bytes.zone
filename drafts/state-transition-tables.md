@@ -23,24 +23,23 @@ The idealized version of the interaction with this machine (the "happy path") is
 To implement this, we have to manage two independent pieces of state: whether you've put money in the machine and whether it has at least one drink left to vend.
 
 Let's model the interaction above with a one-dimensional state-transition table.
-Using only one dimension keeps the modeling as simple as possible while still capturing enough detail to be useful: we have a column each for input, state, next state, and output.
-To find out what happens after an event you just find the input and current state rows you care about and look at the matching next state and output.
+Using only one dimension keeps the modeling as simple as possible while still capturing enough detail to be useful: we have a column each for input, state, next state, and side effects.
+To find out what happens after an event you just find the input and current state rows you care about and look at the matching next state and side effect.
 For our vending machine, it might look like this:
 
-| Input          | Current State           | Next State              | Output     |
-|----------------|-------------------------|-------------------------|------------|
-| Insert Quarter | No Money, Some Drinks   | Some Money, Some Drinks |            |
-| Hit Button     | Some Money, Some Drinks | No Money, Some Drinks   | Vend Drink |
+| Input          | Current State           | Next State              | Side Effect |
+|----------------|-------------------------|-------------------------|-------------|
+| Insert Quarter | No Money, Some Drinks   | Some Money, Some Drinks | -           |
+| Hit Button     | Some Money, Some Drinks | No Money, Some Drinks   | Vend Drink  |
 
 But, of course, we have to model what happens when we do things that are not on the happy path.
 Unfortunately, the one-dimensional version of the table doesn't give us a great view of that!
 
 To figure out where we have holes, we need to add more dimensions.
-If we reorganize our states and inputs along along the axes of a table, we get a two-dimensional state-transition table.
-According to Wikipedia, these are the more common form, and we'll see why!
+Let's reorganize our states along the vertical axis and inputs along the horizontal axis to get a two-dimentional state-transition table.
 
 To read this table, match the current state along the vertical axis with the input along the horizontal.
-Our next state and output live in the intersections (I've separated them with a `/`):
+Our next state and side effects live in the intersections (I've separated them with a `/`):
 
 | ↓ Current State / Input → | Insert Quarter                    | Hit Button                         |
 |---------------------------|-----------------------------------|------------------------------------|
@@ -49,12 +48,12 @@ Our next state and output live in the intersections (I've separated them with a 
 | No Money, No Drinks       |                                   |                                    |
 | Some Money, No Drinks     |                                   |                                    |
 
-So, uh... problems.
-When we look at things this way, we can see that we've only defined two of the possible 8 outcomes!
+And we see, uh... problems.
+When we look at things this way, it's clear that we've only defined two of the possible 8 outcomes!
 Writing things down in an orderly way revealed that we haven't specified all of the possibilities implied by our modeling.
 
 Let's fill the rest out.
-To make things easier, when the state stays the same or there's no action I've marked `-`:
+To make things easier, when the state stays the same or there's no side effect I've marked `-`:
 
 | ↓ Current State / Input → | Insert Quarter                    | Hit Button                         |
 |---------------------------|-----------------------------------|------------------------------------|
