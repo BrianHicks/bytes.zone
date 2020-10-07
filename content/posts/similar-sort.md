@@ -29,10 +29,8 @@ For example:
 
 - `a` to `ab` has an edit distance of 1, because you add `b`.
 - `ab` to `a` also has an edit distance of 1, because you remove `b`.
-- `a` to `b`, on the other hand, has an edit distance of... 1!
-  The first time I looked at this, I thought it was 2 (add 1, remove 1) but replacements also count as a single operation!
-- ok, more complex: `grammar` to `programmer` is 4.
-  (add `pro`, replace `a` with `e`)
+- `a` to `b`, on the other hand, has an edit distance of... 1! The first time I looked at this, I thought it was 2 (add 1, remove 1) but replacements also count as a single operation!
+- ok, more complex: `grammar` to `programmer` is 4. (add `pro`, replace `a` with `e`)
 
 You can do this with any two strings, although it requires more calculations as the strings get longer.
 Let's apply this to filenames!
