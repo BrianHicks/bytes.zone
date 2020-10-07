@@ -73,3 +73,7 @@ I'd call that a win for just a little time spent modeling!
 
 (oh, and bonus: if you're using Elm, the one-dimensional form here is probably pretty familiar.
 "Input, Current State, Next State, Output" does the same job as `update : msg -> model -> ( model, Cmd msg )`!)
+
+---
+
+Thanks to Charlie Koster and Richard Feldman for reviewing drafts of this post.
