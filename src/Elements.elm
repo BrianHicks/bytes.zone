@@ -7,8 +7,9 @@ import Css.Global
 import Css.Media as Media
 import Html.Styled as Html exposing (Attribute, Html)
 import Html.Styled.Attributes as Attr exposing (css)
+import Markdown.Block exposing (Alignment(..), HeadingLevel(..), ListItem(..))
 import Markdown.Html
-import Markdown.Parser exposing (ListItem(..), Renderer)
+import Markdown.Renderer exposing (Renderer)
 import ModularScale
 import SyntaxHighlight
 import Time
@@ -19,24 +20,32 @@ renderer =
     { heading =
         \{ level, rawText, children } ->
             case level of
-                1 ->
+                H1 ->
                     h1 [] children
 
-                2 ->
+                H2 ->
                     h2 [] children
 
-                3 ->
+                H3 ->
                     h3 [] children
 
                 _ ->
                     Html.text "unimplemented header level"
-    , raw = p 0 []
-    , plain = Html.text
-    , code = \snippet -> code [] [ Html.text snippet ]
-    , bold = \text -> strong [] [ Html.text text ]
-    , italic = \text -> em [] [ Html.text text ]
-    , link = \{ title, destination } caption -> Ok (a [ Attr.href destination, Attr.title (Maybe.withDefault "" title) ] caption)
-    , image = \_ _ -> Ok (Html.text "image")
+    , paragraph = p 0 []
+    , blockQuote = \_ -> Html.text "blockquote"
+    , html =
+        Markdown.Html.oneOf
+            [ Markdown.Html.tag "youtube"
+                (\id children -> youtube id [] children)
+                |> Markdown.Html.withAttribute "id"
+            ]
+    , text = Html.text
+    , codeSpan = \snippet -> code [] [ Html.text snippet ]
+    , strong = strong []
+    , emphasis = em []
+    , hardLineBreak = Html.br [] []
+    , link = \{ title, destination } caption -> a [ Attr.href destination, Attr.title (Maybe.withDefault "" title) ] caption
+    , image = \_ -> Html.text "image"
     , unorderedList = ul 0
     , orderedList =
         \start items ->
@@ -47,14 +56,68 @@ renderer =
                 , attrs = []
                 }
     , codeBlock = \{ body, language } -> codeBlock [] language body
-    , blockQuote = \_ -> Html.text "blockquote"
-    , thematicBreak = Html.text "thematic break"
-    , html =
-        Markdown.Html.oneOf
-            [ Markdown.Html.tag "youtube"
-                (\id children -> youtube id [] children)
-                |> Markdown.Html.withAttribute "id"
+    , thematicBreak = thematicBreak
+
+    -- tables
+    , table =
+        Html.table
+            [ css
+                [ openSans
+                , responsiveMaxWidth
+                , Css.marginLeft (ModularScale.rem 2)
+                , Css.marginTop (ModularScale.rem 0)
+                ]
             ]
+    , tableHeader =
+        Html.thead
+            [ css [ Css.borderBottom3 (Css.px 2) Css.solid (Colors.toCss Colors.greyLightest) ]
+            ]
+    , tableBody = Html.tbody []
+    , tableRow =
+        Html.tr
+            [ css [ Css.borderBottom3 (Css.px 1) Css.solid (Colors.toCss Colors.greyLightest) ]
+            ]
+    , tableCell =
+        \alignment content ->
+            Html.td
+                [ css
+                    [ Css.padding2 (ModularScale.rem -1) (ModularScale.rem -2)
+                    , case alignment of
+                        Nothing ->
+                            Css.textAlign Css.left
+
+                        Just AlignLeft ->
+                            Css.textAlign Css.left
+
+                        Just AlignRight ->
+                            Css.textAlign Css.right
+
+                        Just AlignCenter ->
+                            Css.textAlign Css.center
+                    ]
+                ]
+                content
+    , tableHeaderCell =
+        \alignment content ->
+            Html.th
+                [ css
+                    [ Css.padding2 (ModularScale.rem -1) (ModularScale.rem -2)
+                    , Css.fontWeight Css.bold
+                    , case alignment of
+                        Nothing ->
+                            Css.textAlign Css.left
+
+                        Just AlignLeft ->
+                            Css.textAlign Css.left
+
+                        Just AlignRight ->
+                            Css.textAlign Css.right
+
+                        Just AlignCenter ->
+                            Css.textAlign Css.center
+                    ]
+                ]
+                content
     }
 
 
@@ -472,6 +535,23 @@ youtube id attrs children =
                 []
             ]
         ]
+
+
+thematicBreak : Html msg
+thematicBreak =
+    Html.hr
+        [ css
+            [ Css.maxWidth (Css.calc (ModularScale.rem 7.5) Css.plus (ModularScale.rem 2))
+            , Css.paddingLeft (ModularScale.rem 2)
+            , Css.textAlign Css.left
+            , Css.marginLeft Css.zero
+            , Css.height (ModularScale.rem -5)
+            , Css.backgroundColor (Colors.toCss Colors.greyLightest)
+            , Css.border Css.zero
+            , Css.marginTop (ModularScale.rem 0)
+            ]
+        ]
+        []
 
 
 hr : Html msg

@@ -19,6 +19,7 @@ import Html.Styled.Attributes as Attr exposing (css)
 import Index
 import Json.Decode
 import Markdown.Parser
+import Markdown.Renderer
 import Metadata exposing (Metadata)
 import ModularScale
 import Pages exposing (images, pages)
@@ -112,7 +113,7 @@ markdownDocument =
         , body =
             Markdown.Parser.parse
                 >> Result.mapError (List.map Markdown.Parser.deadEndToString >> String.join "\n\n")
-                >> Result.andThen (Markdown.Parser.render Elements.renderer)
+                >> Result.andThen (Markdown.Renderer.render Elements.renderer)
                 >> Result.map (Html.section [])
         }
 
