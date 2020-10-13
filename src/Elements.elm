@@ -64,7 +64,7 @@ renderer =
             [ css
                 [ openSans
                 , responsiveMaxWidth
-                , Css.marginLeft (ModularScale.rem 2)
+                , responsiveMarginLeft
                 , Css.marginTop (ModularScale.rem 0)
                 ]
             ]
@@ -715,6 +715,14 @@ responsivePaddingLeft =
     responsive
         { desktop = [ Css.paddingLeft (ModularScale.rem 2) ]
         , mobile = [ Css.paddingLeft (ModularScale.rem -1) ]
+        }
+
+
+responsiveMarginLeft : Style
+responsiveMarginLeft =
+    responsive
+        { desktop = [ Css.marginLeft (ModularScale.rem 2) ]
+        , mobile = [ Css.marginLeft (ModularScale.rem -1) ]
         }
 
 
