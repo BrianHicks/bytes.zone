@@ -65,6 +65,7 @@ renderer =
                 [ openSans
                 , responsiveMaxWidth
                 , responsiveMarginLeft
+                , Css.marginRight (ModularScale.rem -1)
                 , Css.marginTop (ModularScale.rem 0)
                 ]
             ]
