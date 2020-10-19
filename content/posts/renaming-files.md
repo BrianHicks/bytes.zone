@@ -2,8 +2,8 @@
 {
   "type": "post",
   "title": "Renaming Files with Braces",
-  "summary": "a quick shell trick to save having to open finder",
-  "published": "2020-08-31T00:00:00-05:00",
+  "summary": "shell syntax to make renaming or moving files much easier",
+  "published": "2020-10-19T09:46:00-05:00",
 }
 ---
 
