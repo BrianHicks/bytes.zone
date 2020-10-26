@@ -3,7 +3,7 @@
     "type": "post",
     "title": "Tradeoffs of Custom ID Types in Elm",
     "summary": "Custom ID types are great, but what are you giving up? Is it worth it?",
-    "published": "2020-10-26T16:17-05:00"
+    "published": "2020-10-26T16:17:00-05:00"
 }
 ---
 
