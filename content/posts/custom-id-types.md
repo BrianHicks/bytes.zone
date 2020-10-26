@@ -3,7 +3,7 @@
     "type": "post",
     "title": "Tradeoffs of Custom ID Types in Elm",
     "summary": "Custom ID types are great, but what are you giving up? Is it worth it?",
-    "published": "2020-08-31T00:00:00-05:00"
+    "published": "2020-10-26T16:17-05:00"
 }
 ---
 
@@ -53,12 +53,9 @@ type alias Cat =
 
 With this, you get pretty much all the benefits of wrapping a primitive in a class in other languages:
 
-- we can distinguish between a `CatId` and a (hypothetical) `DogId`.
-  Before defining a type, these would have both been `String`s and totally indistinguishable.
-- We've disallowed `String` operations on the type.
-  There will be no more concatenation, regex matching, et cetera.
-- If we don't export the `CatId` constructor, nobody outside the `Cat` module can construct a value of `CatId`.
-  With this setup, we can be pretty safe trusting values of `CatId` have been constructed in safe ways (for example, that they've been deserialized from JSON provided by the server.)
+- we can distinguish between a `CatId` and a (hypothetical) `DogId`. Before defining a type, these would have both been `String`s and totally indistinguishable.
+- We've disallowed `String` operations on the type. There will be no more concatenation, regex matching, et cetera.
+- If we don't export the `CatId` constructor, nobody outside the `Cat` module can construct a value of `CatId`. With this setup, we can be pretty safe trusting values of `CatId` have been constructed in safe ways (for example, that they've been deserialized from JSON provided by the server.)
 
 The benefits have been well-documented elsewhere and are (in my opinion) pretty unambiguous, so I'm keeping this brief.
 I want to spend more time talking about the drawbacks of doing it in this particular way and how to get around them!
