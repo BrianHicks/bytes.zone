@@ -31,8 +31,8 @@ I can't choose the most important thing among 50 items; there are just too many 
 But it *is* possible if I'm picking from 10, or better yet 5, so getting even a rough order helps a lot!
 
 Items get added to the list over time, too, so the selection method needs to handle that gracefully.
-I don't want to do a bajillion comparisons for every new item to figure out exactly where it goes.
-And again, a rough order is fine here: this doesn't have to be extremely precise, just good enough to choose which things to work on next.
+I don't want to make a bajillion comparisons for every new item to figure out exactly where it goes.
+And again, a rough order is acceptable: this doesn't have to be extremely precise, just good enough to choose which things to work on next.
 
 I'd also like the order to be able to change over time without having to re-sort the entire list.
 If we learn something new or change our minds about where we want to focus, it should be easy to get a new order.
@@ -47,15 +47,15 @@ To order a list of items (let's call them players to match the original use), yo
 When a player wins, they take a portion of the losing player's rating proportional to the difference between the two ratings.
 Then to get rankings, you simply sort players from the highest rating to lowest.
 
-The algorithm used to determine the rating change says that:
+The algorithm used to determine the rating change says:
 
 - When two players are evenly matched, the winner's rating will go up by a little. There's not a lot of useful information in match outcomes when players are evenly ranked: a win could indicate a skill difference, but it could also be a fluke.
-- If an underrated player wins against someone more highly ranked the underrated player's rating will go up a lot. A win here has more information: the winner could be underrated or the loser could be overrated. A fluke could still be possible, but adjustments like these will stabilize rankings over time.
-- On the other hand, if a strong player wins against someone much lower-ranked their score doesn't rise as much. It shouldn't be worth a lot of points to win against players you're expected to beat every time.
+- If an underrated player wins against someone more highly-ranked, the underrated player's rating will go up a lot. A win here has more information: the winner could be underrated or the loser could be overrated. A fluke could still be possible, but adjustments like these will stabilize rankings over time.
+- On the other hand, if a strong player wins against someone much lower-ranked, their score doesn't rise as much. It shouldn't be worth a lot of points to win against players you're expected to beat every time.
 
-There's a little more to the math to adjust for scenarios where there are few matches played vs many, but that's the basic idea.
+There's a little more to the math to adjust for scenarios where there are few matches played versus many, but that's the basic idea.
 
-Taken as a whole, these rules mean that if you consistently win you'll go up in ranking (or if you lose, you'll go down.)
+These rules mean that if you win consistently you'll go up in ranking (or if you lose, you'll go down.)
 Given enough matches, you tend to get a stable ordering of players according to their level!
 
 So does the Elo rating system fit my criteria?
