@@ -3,7 +3,7 @@
     "type": "post",
     "title": "elo-anything",
     "summary": "using the Elo rating system to sort items in our backlog.",
-    "published": "2020-08-31T00:00:00-05:00"
+    "published": "2020-11-24T00:00:00-05:00"
 }
 ---
 
